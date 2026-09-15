@@ -1,13 +1,11 @@
 # 112 Filo Yönetim Sistemi
 
-Bu sürüm, mevcut HTML uygulamasını değiştirmeden Render gibi Node.js destekli servislerde yayınlamak için hazırlanmıştır.
+Render Web Service + PostgreSQL sürümü.
 
-## Render ayarları
-- Runtime: Node
+## Render
 - Build Command: `npm install`
 - Start Command: `npm start`
+- Environment Variable: `DATABASE_URL` = Render Postgres **Internal Database URL**
 
-Bu sürüm PostgreSQL kullanmaz. Dolayısıyla önceki `postgres password authentication failed` hatası bu projede oluşmaz.
-
-## Önemli
-Araç ve servis kayıtları bu aşamada `localStorage` ile tarayıcıda tutulur. Site internette açılır ancak farklı cihazlarda ortak veri görünmez. Ortak veritabanı ikinci aşamada eklenebilir.
+## Veri
+Araç ve servis kayıtları PostgreSQL'de ortak tutulur. Tarayıcıda ayrıca yerel bir kopya bulunur.

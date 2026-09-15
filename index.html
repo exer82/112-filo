@@ -93,7 +93,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
     <div class="panel-head"><h2 id="navViewTitle">Menü</h2><span class="spacer"><button type="button" class="secondary" onclick="closeNavView()">Ana Ekrana Dön</button></span></div>
     <div class="modal-body" id="navViewBody"></div>
   </section>
-  <footer>Veri kaynağı: <b>2026 ARAÇ TAKİP LİSTESİ.xlsx</b> · Bu sürümde kayıtlar tarayıcıda yerel olarak saklanır.</footer>
+  <footer>Veri kaynağı: <b>2026 ARAÇ TAKİP LİSTESİ.xlsx</b> · Kayıtlar ortak PostgreSQL veritabanına otomatik kaydedilir.</footer>
 </main>
 </div>
 
@@ -154,21 +154,55 @@ function normalize(x){return (x??"").toString().toLocaleLowerCase("tr-TR")}
 const STORAGE_KEY="112_arac_takip_data_v2";
 const SERVICE_KEY="112_arac_servis_v1";
 let SERVICES=[];
-function loadSaved(){
- try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))DATA.splice(0,DATA.length,...p)}}catch(e){}
- try{const raw=localStorage.getItem(SERVICE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))SERVICES=p}}catch(e){}
+async function loadSaved(){
+  // Önce mevcut tarayıcı kayıtlarını yükle: böylece mevcut cihazdaki veriler kaybolmaz.
+  try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))DATA.splice(0,DATA.length,...p)}}catch(e){}
+  try{const raw=localStorage.getItem(SERVICE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))SERVICES=p}}catch(e){}
+
+  // Ardından ortak PostgreSQL verisini al.
+  try{
+    const r=await fetch("/api/data",{cache:"no-store"});
+    if(!r.ok) throw new Error("API "+r.status);
+    const p=await r.json();
+    if(Array.isArray(p.vehicles) && p.vehicles.length){
+      DATA.splice(0,DATA.length,...p.vehicles);
+    }else if(Array.isArray(DATA) && DATA.length){
+      await saveToServer();
+    }
+    if(Array.isArray(p.services)){
+      SERVICES=p.services;
+    }
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+    localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    window.serverDataReady=true;
+  }catch(e){
+    console.warn("Ortak veritabanına bağlanılamadı; yerel kayıtlarla devam ediliyor.",e);
+    window.serverDataReady=false;
+  }
 }
 function persist(){
   try{
     localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
     localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
     localStorage.setItem("112_filo_last_save",new Date().toISOString());
+    // Sunucu hazırsa değişikliği ortak PostgreSQL veritabanına da gönder.
+    saveToServer().catch(err=>console.warn("Sunucu kaydı başarısız:",err));
     return true;
   }catch(e){
     console.error("Otomatik kayıt hatası:",e);
     alert("Değişiklikler kaydedilemedi. Tarayıcı depolama alanını kontrol edin.");
     return false;
   }
+}
+async function saveToServer(){
+  const r=await fetch("/api/data",{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({vehicles:DATA,services:SERVICES})
+  });
+  if(!r.ok) throw new Error("Sunucu kaydı başarısız: "+r.status);
+  window.serverDataReady=true;
+  return r.json();
 }
 // Otomatik kayıt: yapılan değişiklikler sayfa açıkken de düzenli olarak güvenli biçimde saklanır.
 let autoSaveTimer=null;
