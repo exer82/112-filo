@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Giresun Ambulans Takip Sistemi</title>
+<style>
+.admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6e9ef;--primary:#1769e0;--primary2:#0f56bd;--ok:#159957;--warn:#e9a400;--danger:#dc3545;--shadow:0 8px 28px rgba(20,32,55,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
+header{height:78px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:18px;position:sticky;top:0;z-index:20;position:sticky}
+.logo{width:68px;height:60px;border-radius:10px;overflow:hidden;background:#fff;display:grid;place-items:center;box-shadow:0 4px 12px rgba(20,32,55,.10)}.logo img{width:100%;height:100%;object-fit:contain;object-position:center;display:block}
+.brand{position:absolute;left:50%;transform:translateX(-50%);font-weight:800;font-size:22px;line-height:1.15;text-align:center;white-space:nowrap;letter-spacing:-.2px}.brand small{display:block;color:var(--muted);font-weight:600;font-size:12px;margin-top:3px}
+.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}.pill{padding:7px 11px;border-radius:999px;background:#eef5ff;color:#1769e0;font-weight:700;font-size:12px}
+button{border:0;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer;background:#1769e0;color:white}button.secondary{background:#eef2f7;color:#344054}button:hover{filter:brightness(.97)}
+.layout{display:grid;grid-template-columns:235px 1fr;min-height:calc(100vh - 68px)}
+aside{background:#101828;color:#b9c3d4;padding:20px 13px;position:sticky;top:68px;height:calc(100vh - 68px)}
+.nav-title{font-size:10px;text-transform:uppercase;letter-spacing:1.2px;margin:14px 11px 8px;color:#718096;font-weight:800}
+.nav{padding:11px 12px;border-radius:9px;margin:3px 0;display:flex;gap:10px;align-items:center;cursor:pointer}.nav.active,.nav:hover{background:#1b3152;color:#fff}.nav .ico{width:20px;text-align:center}
+main{padding:24px;max-width:1600px;width:100%;margin:auto}.topline{display:flex;align-items:center;margin-bottom:18px}.topline h1{margin:0;font-size:25px}.topline p{margin:4px 0 0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:14px;margin-bottom:18px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:17px;box-shadow:var(--shadow)}.metric{font-size:28px;font-weight:800;margin:5px 0}.label{color:var(--muted);font-weight:600}.delta{font-size:12px;margin-top:8px}.ok{color:var(--ok)}.warn{color:var(--warn)}.danger{color:var(--danger)}
+.grid{display:block}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.panel-head h2{font-size:15px;margin:0}.panel-head .spacer{margin-left:auto}
+.toolbar{padding:13px 18px;border-bottom:1px solid var(--line);display:flex;gap:9px;flex-wrap:wrap}.search{flex:1;min-width:220px;padding:10px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.search:focus{border-color:#76aaf0;box-shadow:0 0 0 3px #1769e018}
+select{padding:10px;border:1px solid #d9dee8;border-radius:9px;background:#fff;color:#344054}.fact input,.fact select{width:100%;padding:9px;border:1px solid #d9dee8;border-radius:8px;color:#344054;background:#fff}
+.table-wrap{overflow:auto;max-height:calc(100vh - 360px);min-height:620px}.vehicle-page .cards,.vehicle-page .alert-panel,.vehicle-page .dashboard-grid,.vehicle-page .stat-strip,.vehicle-page .topline{display:none}.vehicle-page main{padding-top:18px}.vehicle-page .table-wrap{max-height:none;min-height:0;overflow-x:auto;overflow-y:visible}.vehicle-page .panel{width:100%}.vehicle-page footer{display:none}.service-page main{padding-top:18px}.service-page .topline,.service-page .cards,.service-page .stat-strip,.service-page .dashboard-grid,.service-page .alert-panel,.service-page .grid,.service-page footer{display:none}.service-page .nav-view{display:block!important;margin-top:0}.service-page .nav-view .panel{box-shadow:none}.service-page .nav-view .panel-head{border:0;padding:0 0 16px}.service-page .nav-view .modal-body{padding:0}.menu-page main{padding-top:18px}.menu-page .topline,.menu-page .cards,.menu-page .stat-strip,.menu-page .dashboard-grid,.menu-page .alert-panel,.menu-page .grid,.menu-page footer{display:none}.menu-page .nav-view{display:block!important;margin-top:0}.menu-page .nav-view .panel{box-shadow:none}.menu-page .nav-view .panel-head{border:0;padding:0 0 16px}.vehicle-page .nav-view{display:none!important}.vehicle-page .topline,.vehicle-page .cards,.vehicle-page .alert-panel{display:none}.vehicle-page .grid{display:block}table{width:100%;border-collapse:collapse;min-width:950px}th,td{padding:11px 13px;border-bottom:1px solid #edf0f4;text-align:left;white-space:nowrap}th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0;z-index:2}tr:hover td{background:#f8fbff}.plate{font-weight:800;color:#175dcc}.sub{display:block;color:#7a8494;font-size:11px;margin-top:2px}
+.status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800}.status.ok{background:#e9f8f0;color:#13834d}.status.warn{background:#fff6dc;color:#9b6a00}.status.danger{background:#fdebed;color:#b42318}.status.critical{background:#b42318;color:#fff;box-shadow:0 0 0 2px #b4231820}.alert-panel{margin-bottom:18px;border:1px solid #f1b7b2;background:#fff7f6;border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.alert-head{padding:14px 18px;border-bottom:1px solid #f3d0cc;display:flex;align-items:center;gap:10px}.alert-head b{color:#9f1c13}.alert-count{margin-left:auto;font-weight:800;color:#b42318}.alert-list{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px}.alert-item{border:1px solid #f0c2bd;background:#fff;border-radius:10px;padding:10px 12px;min-width:210px;cursor:pointer}.alert-item:hover{background:#fff2f0}.alert-item b{display:block;color:#b42318}.alert-item span{font-size:11px;color:#667085}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.side-list{padding:8px 18px 16px}.row{padding:12px 0;border-bottom:1px solid #eef1f5}.row:last-child{border-bottom:0}.row-top{display:flex;justify-content:space-between;gap:10px;font-weight:800}.bar{height:7px;border-radius:99px;background:#edf1f6;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:#1769e0;border-radius:99px}
+.detail{display:none;position:fixed;inset:0;background:#0b122280;z-index:50;align-items:center;justify-content:center;padding:20px}.detail.show{display:flex}.modal{width:min(850px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004}.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex}.modal-body{padding:22px}.x{margin-left:auto;background:#eef2f7;color:#344054}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fact{border:1px solid var(--line);border-radius:10px;padding:12px}.fact b{display:block;color:#667085;font-size:11px;margin-bottom:4px}.fact span{font-weight:700}.notice{padding:11px 13px;border-radius:10px;background:#f3f7ff;color:#174a99;margin:14px 0}
+footer{color:#98a2b3;font-size:11px;padding:18px 0}
+@media(max-width:1000px){.layout{grid-template-columns:1fr}aside{display:none}.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:600px){main{padding:14px}.cards{grid-template-columns:1fr 1fr}.metric{font-size:23px}.facts{grid-template-columns:1fr 1fr}.header-right .pill{display:none}}
+.nav-view .modal-body{padding:18px}.nav-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}.nav-view .nav-table-wrap{overflow:auto}.nav-view table{min-width:760px}.nav-view .mini-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}.nav-view .mini-item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafbfc}.nav-view .mini-item b{display:block;margin-bottom:5px}.nav-view .action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}@media(max-width:900px){.nav-stat-grid{grid-template-columns:repeat(2,1fr)}}
+.vehicle-photo{width:100%;height:190px;object-fit:cover;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;display:block}.photo-placeholder{height:190px;border:1px dashed #b8c0cc;border-radius:14px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:#667085;font-weight:700}.photo-actions{display:flex;gap:8px;margin-top:8px;align-items:center}.photo-actions small{color:#667085}.detail-photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;margin-bottom:14px}
+/* v2 geliştirmeleri */
+.stat-strip{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:18px}.mini-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px}.mini-stat .mini-label{color:var(--muted);font-size:11px;font-weight:700}.mini-stat strong{display:block;font-size:19px;margin-top:4px}.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}.progress-row{padding:10px 0;border-bottom:1px solid #eef1f5}.progress-row:last-child{border-bottom:0}.progress-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:700}.progress-track{height:8px;border-radius:99px;background:#edf1f6;margin-top:7px;overflow:hidden}.progress-track i{display:block;height:100%;border-radius:99px;background:#1769e0}.service-list{display:grid;gap:9px}.service-item{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fbfcfe}.service-item .service-top{display:flex;justify-content:space-between;gap:10px;font-weight:800}.service-item .service-meta{font-size:11px;color:var(--muted);margin-top:4px}.service-actions{display:flex;gap:7px;margin-top:8px;justify-content:flex-end}.tag{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:800;background:#eef5ff;color:#1769e0}.data-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.data-tools button{font-size:12px}.danger-btn{background:#dc3545}.success-btn{background:#159957}.kpi-note{font-size:11px;color:var(--muted);margin-top:5px}@media(max-width:1000px){.stat-strip{grid-template-columns:1fr 1fr}.dashboard-grid{grid-template-columns:1fr}}@media(max-width:600px){.stat-strip{grid-template-columns:1fr 1fr}.dashboard-grid{gap:12px}}
+#serviceDetail{z-index:100}#formDetail{z-index:90}#detail{z-index:50}.service-note{margin-top:7px;font-size:12px;color:#344054;background:#f6f8fb;border-radius:8px;padding:7px 9px}
+.service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}<style>@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}</style></style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
+  <div class="brand">Giresun Ambulans Takip Sistemi <small>Giresun İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
+</header>
+<div class="layout">
+<aside>
+  <div class="nav active" data-nav="overview"><span class="ico">⌂</span> Ana Sayfa</div>
+  <div class="nav" data-nav="vehicles"><span class="ico">🚑</span> Araçlar</div>
+  <div class="nav" data-nav="services"><span class="ico">🛠️</span> Servis Kayıtları</div>
+  <div class="nav" data-nav="locations"><span class="ico">📍</span> Görev Yerleri</div>
+  <div class="nav" data-nav="insurance"><span class="ico">🛡️</span> Sigorta & Kasko</div>
+  <div class="nav" data-nav="inspection"><span class="ico">🔧</span> Muayene</div>
+  <div class="nav" data-nav="ac"><span class="ico">❄️</span> Klima Durumu</div>
+  <div class="nav-title">Yönetim</div>
+  <div class="nav" data-nav="reports"><span class="ico">📊</span> Raporlar</div>
+  <div class="nav" data-nav="settings"><span class="ico">⚙️</span> Ayarlar</div>
+</aside>
+<main>
+  <div class="topline"><div><h1>Araç Filosu</h1><p>2026 araç takip listesi — hızlı durum ve belge kontrolü</p></div></div>
+  <section class="cards">
+    <div class="card"><div class="label">Toplam Araç</div><div class="metric" id="total">0</div><div class="delta ok">● Filodaki kayıtlar</div></div>
+    <div class="card"><div class="label">Klima Aktif</div><div class="metric" id="activeAc">0</div><div class="delta ok">● Kullanıma hazır</div></div>
+    <div class="card"><div class="label">Yaklaşan Muayene</div><div class="metric" id="inspection">0</div><div class="delta warn">● 90 gün içinde · 30 gün kala kırmızı</div></div>
+    <div class="card"><div class="label">Sigorta Riski</div><div class="metric" id="insurance">0</div><div class="delta danger">● Süresi geçmiş / yakın</div></div>
+  </section>
+  <section class="stat-strip">
+    <div class="mini-stat"><div class="mini-label">Acil Evrak</div><strong id="criticalDocs">0</strong><div class="kpi-note">30 gün içinde veya geçmiş</div></div>
+    <div class="mini-stat"><div class="mini-label">Kaskolu Araç</div><strong id="insuredCount">0</strong><div class="kpi-note">Kasko = EVET</div></div>
+    <div class="mini-stat"><div class="mini-label">4×4 Araç</div><strong id="fourByFour">0</strong><div class="kpi-note">Çeker bilgisine göre</div></div>
+    <div class="mini-stat"><div class="mini-label">Ortalama Yaş</div><strong id="avgAge">0 yıl</strong><div class="kpi-note">Model yılına göre</div></div>
+  </section>
+  <section class="dashboard-grid">
+    <div class="panel"><div class="panel-head"><h2>📊 Filo Durum Analizi</h2></div><div class="side-list" id="fleetAnalysis"></div></div>
+    <div class="panel"><div class="panel-head"><h2>🛠️ Son Bakım / Servis</h2><span class="spacer"><button type="button" onclick="openServiceForm()">+ Servis Kaydı</button></span></div><div class="side-list" id="recentServices"></div></div>
+  </section>
+  <div class="alert-panel" id="alertPanel" style="display:none">
+  <div class="alert-head"><span>🚨</span><b>Acil Evrak Uyarıları</b><span class="alert-count" id="alertCount"></span></div>
+  <div class="alert-list" id="alertList"></div>
+</div>
+<div class="grid">
+    <section class="panel">
+      <div class="panel-head"><h2>🚑 Araç Listesi</h2><span class="spacer" id="count"></span></div>
+      <div class="toolbar">
+        <input class="search" id="search" placeholder="Plaka, marka, görev yeri, şasi no ara...">
+        <select id="location"><option value="">Tüm görev yerleri</option></select>
+        <select id="condition"><option value="">Belge durumu</option><option value="ok">Uygun</option><option value="warn">Yaklaşıyor</option><option value="danger">Riskli</option></select>
+      </div>
+      <div class="table-wrap"><table><thead><tr>
+        <th>Plaka</th><th>Marka / Model</th><th>Model</th><th>Çeker</th><th>Görev Yeri</th><th>Muayene</th><th>Sigorta</th><th>Ek C Muayene</th><th>Kasko</th><th>Klima</th>
+      </tr></thead><tbody id="tbody"></tbody></table></div>
+    </section>
+  </div>
+  <section class="panel nav-view" id="navView" style="display:none;margin-top:18px">
+    <div class="panel-head"><h2 id="navViewTitle">Menü</h2><span class="spacer"><button type="button" class="secondary" onclick="closeNavView()">Ana Ekrana Dön</button></span></div>
+    <div class="modal-body" id="navViewBody"></div>
+  </section>
+  <footer>Veri kaynağı: <b>2026 ARAÇ TAKİP LİSTESİ.xlsx</b> · Bu sürümde kayıtlar tarayıcıda yerel olarak saklanır.</footer>
+</main>
+</div>
+
+<div class="detail" id="formDetail"><div class="modal">
+<div class="modal-head"><div><b id="formTitle">Yeni Araç Ekle</b><div class="sub">Araç bilgilerini girin ve kaydedin</div></div><button class="x" onclick="closeVehicleForm()">Kapat</button></div>
+<div class="modal-body"><form id="vehicleForm" onsubmit="saveVehicle(event)">
+<input type="hidden" id="editIndex"><div class="photo-box"><label>Araç Fotoğrafı</label><input id="fPhoto" type="file" accept="image/*" onchange="previewPhoto(this)"><div id="photoPreview" style="margin-top:8px"></div><div class="photo-actions"><button type="button" class="secondary" id="removePhotoBtn" onclick="removePhoto()" style="display:none">🗑️ Fotoğrafı Kaldır</button><small>JPG, PNG veya WEBP</small></div></div>
+<div class="facts">
+<div class="fact"><b>Plaka *</b><input id="f_plaka" required></div>
+<div class="fact"><b>Marka</b><input id="f_marka"></div>
+<div class="fact"><b>Model Yılı</b><input id="f_model"></div>
+    <div class="fact"><b>Kilometre</b><input type="number" id="f_km" min="0"></div>
+<div class="fact"><b>Çeker</b><input id="f_ceker"></div>
+<div class="fact"><b>Görev Yeri</b><input id="f_gorev"></div>
+<div class="fact"><b>Klima Durumu</b><select id="f_klima"><option>AKTİF</option><option>PASİF</option></select></div>
+<div class="fact"><b>Motor Seri No</b><input id="f_motor"></div>
+<div class="fact"><b>Şasi Seri No</b><input id="f_sasi"></div>
+<div class="fact"><b>Ruhsat Belge No</b><input id="f_ruhsat"></div>
+<div class="fact"><b>Kasko</b><select id="f_kasko"><option>EVET</option><option>HAYIR</option></select></div>
+<div class="fact"><b>Sigorta Başlangıç</b><input type="date" id="f_sigbas"></div>
+<div class="fact"><b>Sigorta Bitiş</b><input type="date" id="f_sigbit"></div>
+<div class="fact"><b>Muayene Başlangıç</b><input type="date" id="f_muybas"></div>
+<div class="fact"><b>Muayene Bitiş</b><input type="date" id="f_muybit"></div>
+<div class="fact"><b>Ek C Muayene</b><input id="f_ekc"></div>
+</div>
+<div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" onclick="closeVehicleForm()">İptal</button><button type="submit">💾 Kaydet</button></div>
+</form></div></div></div>
+<div class="admin-lock" id="adminLock"><div class="lock-box"><div class="lock-icon">🔐</div><h3>Yönetici Doğrulaması</h3><p>Bu işlem için yönetici parolasını girin.</p><input type="password" id="adminPasswordInput" autocomplete="current-password" placeholder="Yönetici parolası"><div class="lock-actions"><button type="button" class="secondary" onclick="closeAdminLock()">İptal</button><button type="button" onclick="confirmAdminPassword()">Devam Et</button></div></div></div>
+<div class="detail" id="serviceDetail"><div class="modal"><div class="modal-head"><div><b id="serviceFormTitle">Servis / Bakım Kaydı</b><div class="sub">Araç bakım ve servis işlemini kaydedin</div></div><button class="x" onclick="closeServiceForm()">Kapat</button></div><div class="modal-body"><form id="serviceForm" onsubmit="saveService(event)"><input type="hidden" id="serviceEditIndex"><div class="facts">
+<div class="fact"><b>Araç Plakası *</b><select id="s_vehicle" required></select></div>
+<div class="fact"><b>Tarih *</b><input type="date" id="s_date" required></div>
+<div class="fact"><b>İşlem Türü *</b><select id="s_type"><option>Periyodik Bakım</option><option>Yağ / Filtre</option><option>Lastik</option><option>Fren</option><option>Klima</option><option>Arıza</option><option>Diğer</option></select></div>
+<div class="fact"><b>Kilometre</b><input type="number" id="s_km" min="0"></div>
+<div class="fact"><b>Maliyet (₺)</b><input type="number" id="s_cost" min="0" step="0.01"></div>
+<div class="fact"><b>Sonraki Bakım Km</b><input type="number" id="s_nextKm" min="0"></div>
+</div><div class="fact" style="margin-top:10px"><b>Not</b><input id="s_note" placeholder="Yapılan işlem / parça / açıklama"></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" onclick="closeServiceForm()">İptal</button><button type="submit" class="success-btn">💾 Kaydet</button></div></form></div></div></div>
+<div class="detail" id="detail"><div class="modal"><div class="modal-head"><div><b id="mTitle"></b><div class="sub" id="mSub"></div></div><button class="x" onclick="closeModal()">Kapat</button></div><div class="modal-body" id="mBody"></div></div></div>
+
+<script>
+const DATA=[{"SIRA": "1.0", "ARAC PLAKASI": "28 AAC 451", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2017.0", "MOTOR SERİ NO": "HK02404", "ŞASİ SERİ NO": "NM0XXXTTGXHK02404", "GÖREV YERİ": "GÜCE 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-09 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-09 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-10 00:00:00", "MUAYENE BİTİŞ": "2026-12-10 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-29 00:00:00", "RUHSAT BELGE NO": "EA067521", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "2.0", "ARAC PLAKASI": "28 AB 006", "MARKASI": "FORD /TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2014.0", "MOTOR SERİ NO": "ER16413", "ŞASİ SERİ NO": "NM0XXXTTGXER16413", "GÖREV YERİ": "EYNESİL 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-10 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-10 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-18 00:00:00", "MUAYENE BİTİŞ": "2027-02-18 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-04-14 00:00:00", "RUHSAT BELGE NO": "CG290818", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "3.0", "ARAC PLAKASI": "28 AB 009", "MARKASI": "MITSUBISHI", "ÇEKER": "4*4", "MODEL YILI": "2010.0", "MOTOR SERİ NO": "4M41UAB9941", "ŞASİ SERİ NO": "JMBLYV98WAJ900201", "GÖREV YERİ": "ÇAMOLUK 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-10 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-10 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-05 00:00:00", "MUAYENE BİTİŞ": "2026-12-05 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "CG290821", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "4.0", "ARAC PLAKASI": "28 AB 090", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "LY57496", "ŞASİ SERİ NO": "NM0EXXTTRELY57496", "GÖREV YERİ": "ESPİYE 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-01 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-01 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-12 00:00:00", "MUAYENE BİTİŞ": "2027-03-12 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-07 00:00:00", "RUHSAT BELGE NO": "FJ266871", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "5.0", "ARAC PLAKASI": "28 AB 092", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "05092025TNB61UZ9T", "ŞASİ SERİ NO": "NM0EXXTTRELL35037", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-01 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-01 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-13 00:00:00", "MUAYENE BİTİŞ": "2027-03-13 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-10-02 00:00:00", "RUHSAT BELGE NO": "IA457634", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "6.0", "ARAC PLAKASI": "28 AB 118", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "JP85074", "ŞASİ SERİ NO": "NM0XXXTTGXJP85074", "GÖREV YERİ": "BULANCAK 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-04-18 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-04-18 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-10-25 00:00:00", "MUAYENE BİTİŞ": "2026-10-25 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "EJ526267", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "7.0", "ARAC PLAKASI": "28 AB 119", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "11052026TNBZZB5C2", "ŞASİ SERİ NO": "NM0EXXTTRELY78874", "GÖREV YERİ": "DERELİ 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-29 00:00:00", "MUAYENE BİTİŞ": "2027-01-29 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-03 00:00:00", "RUHSAT BELGE NO": "IL989816", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "8.0", "ARAC PLAKASI": "28 AB 120", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "LY78871", "ŞASİ SERİ NO": "NM0EXXTTRELY78871", "GÖREV YERİ": "DOĞANKENT 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-22 00:00:00", "MUAYENE BİTİŞ": "2027-01-22 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-05 00:00:00", "RUHSAT BELGE NO": "FJ266498", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "9.0", "ARAC PLAKASI": "28 AB 124", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "LL45654", "ŞASİ SERİ NO": "NM0EXXTTRELL45654", "GÖREV YERİ": "TİREBOLU 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-22 00:00:00", "MUAYENE BİTİŞ": "2027-01-22 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-10-02 00:00:00", "RUHSAT BELGE NO": "FJ266499", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "10.0", "ARAC PLAKASI": "28 AB 125", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2020.0", "MOTOR SERİ NO": "LL47499", "ŞASİ SERİ NO": "NM0EXXTTRELL47499", "GÖREV YERİ": "ŞEBİNKARAHİSAR 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-13 00:00:00", "MUAYENE BİTİŞ": "2027-01-13 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-10-06 00:00:00", "RUHSAT BELGE NO": "FJ266500", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "11.0", "ARAC PLAKASI": "28 AB 144", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "JA80327", "ŞASİ SERİ NO": "NM0XXXTTGXJA80327", "GÖREV YERİ": "BULANCAK 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-13 00:00:00", "MUAYENE BİTİŞ": "2026-12-13 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-25 00:00:00", "RUHSAT BELGE NO": "EK108340", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "12.0", "ARAC PLAKASI": "28 AB 145", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "05062026TNBE8VG7U", "ŞASİ SERİ NO": "NM0XXXTTGXJA80325", "GÖREV YERİ": "YAĞLIDERE 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-18 00:00:00", "MUAYENE BİTİŞ": "2027-02-18 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-24 00:00:00", "RUHSAT BELGE NO": "IL990626", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "13.0", "ARAC PLAKASI": "28 AB 196 ", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2016.0", "MOTOR SERİ NO": "18122023TNBLSJ5LL", "ŞASİ SERİ NO": "NM0XXXTTGXGT27339", "GÖREV YERİ": "PİRAZİZ 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-17 00:00:00", "MUAYENE BİTİŞ": "2026-12-17 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-04-14 00:00:00", "RUHSAT BELGE NO": "GS950508", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "14.0", "ARAC PLAKASI": "28 AB 217", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2016.0", "MOTOR SERİ NO": "05052026TNBFFGRDT", "ŞASİ SERİ NO": "NM0XXXTTGXGT34341", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-06-06 00:00:00", "MUAYENE BİTİŞ": "2027-06-06 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-06-02 00:00:00", "RUHSAT BELGE NO": "IL989592", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "15.0", "ARAC PLAKASI": "28 AB 295", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2016.0", "MOTOR SERİ NO": "22042026TNBFZA3ET", "ŞASİ SERİ NO": "NM0XXXTTGXGT27332", "GÖREV YERİ": "MERKEZ 7 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-07-03 00:00:00", "MUAYENE BİTİŞ": "2027-07-03 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-06-02 00:00:00", "RUHSAT BELGE NO": "IL989018", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "16.0", "ARAC PLAKASI": "28 AB 412", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "14012026TNBMRS1EP", "ŞASİ SERİ NO": "NM0XXXTTGXJG00667", "GÖREV YERİ": "ESPİYE 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-06 00:00:00", "MUAYENE BİTİŞ": "2026-12-06 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-11-25 00:00:00", "RUHSAT BELGE NO": "IG398308", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "17.0", "ARAC PLAKASI": "28 AB 413", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "16072024TNBB1Y54U", "ŞASİ SERİ NO": "NM0XXXTTGXJG86953", "GÖREV YERİ": "GÖRELE 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-27 00:00:00", "MUAYENE BİTİŞ": "2027-03-27 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-12-17 00:00:00", "RUHSAT BELGE NO": "HG527754", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "18.0", "ARAC PLAKASI": "28 AB 423", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2016.0", "MOTOR SERİ NO": "GT25685", "ŞASİ SERİ NO": "NM0XXXTTGXGT25685", "GÖREV YERİ": "TİREBOLU 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-05-23 00:00:00", "MUAYENE BİTİŞ": "2027-05-23 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-04-14 00:00:00", "RUHSAT BELGE NO": "DB038159", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "19.0", "ARAC PLAKASI": "28 AB 504", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "JG05465", "ŞASİ SERİ NO": "NM0XXXTTGXJG05465", "GÖREV YERİ": "KEŞAP 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-12-08 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-12-08 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-09 00:00:00", "MUAYENE BİTİŞ": "2026-12-09 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "EJ526103", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "20.0", "ARAC PLAKASI": "28 AB 506", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "JG86947", "ŞASİ SERİ NO": "NM0XXXTTGXJG86947", "GÖREV YERİ": "ŞEBİNKARAHİSAR 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-12 00:00:00", "MUAYENE BİTİŞ": "2027-01-12 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-12-03 00:00:00", "RUHSAT BELGE NO": "EJ526117", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "21.0", "ARAC PLAKASI": "28 AB 581", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2019.0", "MOTOR SERİ NO": "05092025TNBJTRMD8", "ŞASİ SERİ NO": "NM0EXXTTREKM18310", "GÖREV YERİ": "ÇANAKÇI 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-15 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-15 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-16 00:00:00", "MUAYENE BİTİŞ": "2027-01-16 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-18 00:00:00", "RUHSAT BELGE NO": "IA457477", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "22.0", "ARAC PLAKASI": "28 AB 582", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2019.0", "MOTOR SERİ NO": "KU05885", "ŞASİ SERİ NO": "NM0EXXTTREKU05885", "GÖREV YERİ": "MERKEZ 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-15 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-15 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-05 00:00:00", "MUAYENE BİTİŞ": "2027-02-05 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-07 00:00:00", "RUHSAT BELGE NO": "EV003925", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "23.0", "ARAC PLAKASI": "28 AB 583", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2019.0", "MOTOR SERİ NO": "21032025TNBAD3LPT", "ŞASİ SERİ NO": "NM0EXXTTREKM18320", "GÖREV YERİ": "MERKEZ 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-15 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-15 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-22 00:00:00", "MUAYENE BİTİŞ": "2027-01-22 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "HT241140", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "24.0", "ARAC PLAKASI": "28 AB 667", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "FU85847", "ŞASİ SERİ NO": "NM0XXXTTGXFU85847", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-18 00:00:00", "MUAYENE BİTİŞ": "2027-03-18 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-12-02 00:00:00", "RUHSAT BELGE NO": "GL201676", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "25.0", "ARAC PLAKASI": "28 AB 668", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "01032024TNB1CT10B", "ŞASİ SERİ NO": "NM0XXXTTGXFP30944", "GÖREV YERİ": "ALUCRA DEVLET HASTANESİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-06-01 00:00:00", "MUAYENE BİTİŞ": "2027-06-01 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-05-20 00:00:00", "RUHSAT BELGE NO": "HA466437", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "26.0", "ARAC PLAKASI": "28 AB 669", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "07062024TNBFDMF62", "ŞASİ SERİ NO": "NM0XXXTTGXFU06215", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-06-25 00:00:00", "MUAYENE BİTİŞ": "2027-06-25 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "HG526161", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "27.0", "ARAC PLAKASI": "28 AB 671", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "FU00723", "ŞASİ SERİ NO": "NM0XXXTTGXFU00723", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-19 00:00:00", "MUAYENE BİTİŞ": "2027-03-19 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-12-27 00:00:00", "RUHSAT BELGE NO": "CP263097", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "28.0", "ARAC PLAKASI": "28 AB 672", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "18122023TNB3BJF61", "ŞASİ SERİ NO": "NM0XXXTTGXFU80464", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-23 00:00:00", "MUAYENE BİTİŞ": "2026-12-23 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "GS950506", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "29.0", "ARAC PLAKASI": "28 AB 674", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "FP30960", "ŞASİ SERİ NO": "NM0XXXTTGXFP30960", "GÖREV YERİ": "MERKEZ 9 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-05-23 00:00:00", "MUAYENE BİTİŞ": "2027-05-23 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-04-21 00:00:00", "RUHSAT BELGE NO": "CP263100", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "30.0", "ARAC PLAKASI": "28 AB 675", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "14012026TNBTEKC21", "ŞASİ SERİ NO": "NM0XXXTTGXFM29990", "GÖREV YERİ": "ŞEBİNKARAHİSAR DEVLET HAS.", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-09-10 00:00:00", "MUAYENE BİTİŞ": "2026-09-10 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-05-20 00:00:00", "RUHSAT BELGE NO": "IG398103", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "31.0", "ARAC PLAKASI": "28 AB 676", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2015.0", "MOTOR SERİ NO": "FM28242", "ŞASİ SERİ NO": "NM0XXXTTGXFM28242", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-02 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-02 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-03-05 00:00:00", "MUAYENE BİTİŞ": "2027-03-05 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-04-21 00:00:00", "RUHSAT BELGE NO": "CP266240", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "32.0", "ARAC PLAKASI": "28 AB 704", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "09102025TNBEZVBZC", "ŞASİ SERİ NO": "NM0XXXTTGXJA80324", "GÖREV YERİ": "MERKEZ 3 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-12 00:00:00", "MUAYENE BİTİŞ": "2026-12-12 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-12-16 00:00:00", "RUHSAT BELGE NO": "IC823706", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "33.0", "ARAC PLAKASI": "28 AB 705", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "07052024TNBFD9AG6", "ŞASİ SERİ NO": "NM0XXXTTGXJG02871", "GÖREV YERİ": "MERKEZ 6 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-12 00:00:00", "MUAYENE BİTİŞ": "2026-12-12 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-12-02 00:00:00", "RUHSAT BELGE NO": "HD215758", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "34.0", "ARAC PLAKASI": "28 AB 810", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2018.0", "MOTOR SERİ NO": "16092025TNBSSEMJ1", "ŞASİ SERİ NO": "NM0XXXTTGXJG02888", "GÖREV YERİ": "GÖRELE 2 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-21 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-21 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-04-28 00:00:00", "MUAYENE BİTİŞ": "2027-04-28 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-12-17 00:00:00", "RUHSAT BELGE NO": "IA457786", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "35.0", "ARAC PLAKASI": "28 AB 847", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2016.0", "MOTOR SERİ NO": "GB88304", "ŞASİ SERİ NO": "NM0XXXTTGXGB88304", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-06-23 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-06-23 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-09-12 00:00:00", "MUAYENE BİTİŞ": "2026-09-12 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-05-09 00:00:00", "RUHSAT BELGE NO": "CR446830", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "36.0", "ARAC PLAKASI": "28 ACL 012", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2025.0", "MOTOR SERİ NO": "SK68338", "ŞASİ SERİ NO": "NM0EXXTTRESK68338", "GÖREV YERİ": "GÖRELE 3 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-12-23 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-12-23 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-26 00:00:00", "MUAYENE BİTİŞ": "2026-12-26 00:00:00", "KASKO": "HAYIR", "EK C MUAYENE": "2030-10-30 00:00:00", "RUHSAT BELGE NO": "IE574554", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "37.0", "ARAC PLAKASI": "28 ACL 094", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2025.0", "MOTOR SERİ NO": "SB82631", "ŞASİ SERİ NO": "NM0EXXTTRESB82631", "GÖREV YERİ": "MERKEZ 5 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-11-20 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-11-20 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-11-26 00:00:00", "MUAYENE BİTİŞ": "2026-11-26 00:00:00", "KASKO": "HAYIR", "EK C MUAYENE": "2030-05-07 00:00:00", "RUHSAT BELGE NO": "IB366776", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "38.0", "ARAC PLAKASI": "28 ACL 097", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*2", "MODEL YILI": "2023.0", "MOTOR SERİ NO": "PL63594", "ŞASİ SERİ NO": "NM0EXXTTREPL63594", "GÖREV YERİ": "BULANCAK 4 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-13 00:00:00", "MUAYENE BİTİŞ": "2027-01-13 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-05-27 00:00:00", "RUHSAT BELGE NO": "GZ679325", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "39.0", "ARAC PLAKASI": "28 ACL 098", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*4", "MODEL YILI": "2023.0", "MOTOR SERİ NO": "PE44795", "ŞASİ SERİ NO": "NM0EXXTTREPE44795", "GÖREV YERİ": "ÇAMOLUK 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-14 00:00:00", "MUAYENE BİTİŞ": "2027-01-14 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2028-05-04 00:00:00", "RUHSAT BELGE NO": "GZ679320", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "40.0", "ARAC PLAKASI": "28 ACL 162", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2022.0", "MOTOR SERİ NO": "19122025TNBRTS96R", "ŞASİ SERİ NO": "NM0EXXTTRENR61792", "GÖREV YERİ": "ALUCRA 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-01-15 00:00:00", "MUAYENE BİTİŞ": "2027-01-15 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2027-11-10 00:00:00", "RUHSAT BELGE NO": "IG397740", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "41.0", "ARAC PLAKASI": "28 ACL 225", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2025.0", "MOTOR SERİ NO": "SC51666", "ŞASİ SERİ NO": "NM0EXXTTRESC51666", "GÖREV YERİ": "MERKEZ 4 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-12-11 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-12-11 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-16 00:00:00", "MUAYENE BİTİŞ": "2026-12-16 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2030-09-22 00:00:00", "RUHSAT BELGE NO": "IE574403", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "42.0", "ARAC PLAKASI": "28 ACL 226", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2025.0", "MOTOR SERİ NO": "SC51686", "ŞASİ SERİ NO": "NM0EXXTTRESC51686", "GÖREV YERİ": "BULANCAK 3 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-12-11 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-12-11 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-16 00:00:00", "MUAYENE BİTİŞ": "2026-12-16 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2030-09-19 00:00:00", "RUHSAT BELGE NO": "IE574404", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "43.0", "ARAC PLAKASI": "28 AF 911", "MARKASI": "MITSUBISHİ", "ÇEKER": "4*4", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "4M41UAJ2022", "ŞASİ SERİ NO": "JMBLYV98WDJ400881", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-04-23 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-04-23 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-05-17 00:00:00", "MUAYENE BİTİŞ": "2027-05-17 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "BU691251", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "44.0", "ARAC PLAKASI": "28 AL 112", "MARKASI": "MITSUBISHİ", "ÇEKER": "4*4", "MODEL YILI": "2011.0", "MOTOR SERİ NO": "4M41UAE2539", "ŞASİ SERİ NO": "JMBLYV98WBJ000797", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-07-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-07-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-09-23 00:00:00", "MUAYENE BİTİŞ": "2026-09-23 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "BF844138", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "45.0", "ARAC PLAKASI": "28 AN 112", "MARKASI": "MITSUBISHİ", "ÇEKER": "4*4", "MODEL YILI": "2010.0", "MOTOR SERİ NO": "4M41UAC0193", "ŞASİ SERİ NO": "JMBLYV98WAJ900221", "GÖREV YERİ": "ALUCRA 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-10-20 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-10-20 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-10-27 00:00:00", "MUAYENE BİTİŞ": "2026-10-27 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "AZ559700", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "46.0", "ARAC PLAKASI": "28 AN 538", "MARKASI": "MITSUBISHİ", "ÇEKER": "4*4", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "4M41UAF9338", "ŞASİ SERİ NO": "JMBLYV98WCJ401023", "GÖREV YERİ": "ŞEBİNKARAHİSAR 1 NOLU ASHİ", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-05 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-05 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-18 00:00:00", "MUAYENE BİTİŞ": "2026-12-18 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "BL208620", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "47.0", "ARAC PLAKASI": "28 DA 112", "MARKASI": "VOLKSWAGEN", "ÇEKER": "4*2", "MODEL YILI": "2009.0", "MOTOR SERİ NO": "BJM022928", "ŞASİ SERİ NO": "WV1ZZZ2EZ96015289", "GÖREV YERİ": "HİZMET ARACI", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-08-11 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-08-11 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-08-19 00:00:00", "MUAYENE BİTİŞ": "2027-08-19 00:00:00", "KASKO": "HAYIR", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "FZ743891", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "48.0", "ARAC PLAKASI": "28 DH 112", "MARKASI": "VOLKSWAGEN", "ÇEKER": "4*2", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "CKU025581", "ŞASİ SERİ NO": "WV1ZZZ2FZD7003565", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-05-27 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-05-27 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-15 00:00:00", "MUAYENE BİTİŞ": "2026-12-15 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-06-02 00:00:00", "RUHSAT BELGE NO": "BU691252", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "49.0", "ARAC PLAKASI": "28 DH 113", "MARKASI": "HONDA", "ÇEKER": null, "MODEL YILI": "2010.0", "MOTOR SERİ NO": "RC52E2007772", "ŞASİ SERİ NO": "VTMRC52B08E026702", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2025-11-26 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2026-11-26 00:00:00", "MUAYENE BAŞLANGIÇ": null, "MUAYENE BİTİŞ": null, "KASKO": "HAYIR", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "EJ526105", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "50.0", "ARAC PLAKASI": "28 ED 740", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*4", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "CL48398", "ŞASİ SERİ NO": "NM0XXXTTFXCL48398", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-05-16 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-05-16 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-06-09 00:00:00", "MUAYENE BİTİŞ": "2027-06-09 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-25 00:00:00", "RUHSAT BELGE NO": "BS249967", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "51.0", "ARAC PLAKASI": "28 ED 741", "MARKASI": "MERCEDES BENZ", "ÇEKER": "4*2", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "25012024TNB836ZEC", "ŞASİ SERİ NO": "WDB9066331S733659", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-12 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-12 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-06 00:00:00", "MUAYENE BİTİŞ": "2027-02-06 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-04-14 00:00:00", "RUHSAT BELGE NO": "GS950888", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "52.0", "ARAC PLAKASI": "28 ED 742", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*2", "MODEL YILI": "2012.0", "MOTOR SERİ NO": "EGM2800MOT000253", "ŞASİ SERİ NO": "NM0XXXTTFXCY62048", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-02-09 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-02-09 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-18 00:00:00", "MUAYENE BİTİŞ": "2027-02-18 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2029-06-02 00:00:00", "RUHSAT BELGE NO": "BU680905", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "53.0", "ARAC PLAKASI": "28 EP 110", "MARKASI": "MERCEDES BENZ", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "64289641451592.", "ŞASİ SERİ NO": "WDB9061551N574799", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-03-27 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-03-27 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-09-17 00:00:00", "MUAYENE BİTİŞ": "2026-09-17 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "MUAF", "RUHSAT BELGE NO": "CB383595", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "54.0", "ARAC PLAKASI": "28 TR 910", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*4", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "31012025TNBEKCGUL", "ŞASİ SERİ NO": "NM0XXXTTFXDK80147", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2026-02-23 00:00:00", "MUAYENE BİTİŞ": "2027-02-23 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-07-17 00:00:00", "RUHSAT BELGE NO": "HP531810", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "55.0", "ARAC PLAKASI": "28 TR 911", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "19092024TNBMK9V51", "ŞASİ SERİ NO": "NM0XXXTTFXDD27588", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-10-02 00:00:00", "MUAYENE BİTİŞ": "2026-10-02 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-11-06 00:00:00", "RUHSAT BELGE NO": "HK316590", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "56.0", "ARAC PLAKASI": "28 TR 912", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "DD27589", "ŞASİ SERİ NO": "NM0XXXTTFXDD27589", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-09-22 00:00:00", "MUAYENE BİTİŞ": "2026-09-22 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-07-19 00:00:00", "RUHSAT BELGE NO": "BZ091784", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "57.0", "ARAC PLAKASI": "28 TR 913", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "EGM28500MTR000277", "ŞASİ SERİ NO": "NM0XXXTTFXDK75647", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-03 00:00:00", "MUAYENE BİTİŞ": "2026-12-03 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-07-12 00:00:00", "RUHSAT BELGE NO": "CF322548", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "58.0", "ARAC PLAKASI": "28 TR 914", "MARKASI": "FORD/TRANSİT ", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "DK69861", "ŞASİ SERİ NO": "NM0XXXTTFXDK69861", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-11-10 00:00:00", "MUAYENE BİTİŞ": "2026-11-10 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-07-12 00:00:00", "RUHSAT BELGE NO": "BZ091781", "KLİMA DURUMU": "AKTİF"}, {"SIRA": "59.0", "ARAC PLAKASI": "28 TR 915", "MARKASI": "FORD/TRANSİT", "ÇEKER": "4*2", "MODEL YILI": "2013.0", "MOTOR SERİ NO": "18122023TNB813EB5", "ŞASİ SERİ NO": "NM0XXXTTFXDD14205", "GÖREV YERİ": "BAŞHEKİMLİK", "ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ": "2026-01-28 00:00:00", "ZORUNLU TRAFİK SİGORTASI BİTİŞ": "2027-01-28 00:00:00", "MUAYENE BAŞLANGIÇ": "2025-12-17 00:00:00", "MUAYENE BİTİŞ": "2026-12-17 00:00:00", "KASKO": "EVET", "EK C MUAYENE": "2026-07-17 00:00:00", "RUHSAT BELGE NO": "GS950505", "KLİMA DURUMU": "ARIZALI"}];
+const getToday=()=>{const d=new Date();d.setHours(0,0,0,0);return d;};
+const fmt=d=>d?new Date(d).toLocaleDateString("tr-TR"): "—";
+const days=(d)=>d?Math.ceil((new Date(d)-getToday())/86400000):99999;
+function docStatus(date){
+  let x=days(date);
+  if(x<0) return "danger";
+  if(x<=30) return "critical";
+  if(x<=90) return "warn";
+  return "ok";
+}
+function label(s){return s==="danger"?"Süresi Geçti":s==="critical"?"ACİL":s==="warn"?"Yaklaşıyor":"Uygun"}
+function status(date){
+  let s=docStatus(date);
+  return `<span class="status ${s}"><i class="dot"></i>${label(s)}</span>`;
+}
+function normalize(x){return (x??"").toString().toLocaleLowerCase("tr-TR")}
+
+const STORAGE_KEY="112_arac_takip_data_v2";
+const SERVICE_KEY="112_arac_servis_v1";
+let SERVICES=[];
+function loadSaved(){
+ try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))DATA.splice(0,DATA.length,...p)}}catch(e){}
+ try{const raw=localStorage.getItem(SERVICE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))SERVICES=p}}catch(e){}
+}
+function persist(){
+  try{
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+    localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    localStorage.setItem("112_filo_last_save",new Date().toISOString());
+    return true;
+  }catch(e){
+    console.error("Otomatik kayıt hatası:",e);
+    alert("Değişiklikler kaydedilemedi. Tarayıcı depolama alanını kontrol edin.");
+    return false;
+  }
+}
+// Otomatik kayıt: yapılan değişiklikler sayfa açıkken de düzenli olarak güvenli biçimde saklanır.
+let autoSaveTimer=null;
+function scheduleAutoSave(){
+  clearTimeout(autoSaveTimer);
+  autoSaveTimer=setTimeout(()=>persist(),300);
+}
+document.addEventListener("input",e=>{
+  if(e.target && e.target.closest("#vehicleForm,#serviceForm")) scheduleAutoSave();
+});
+document.addEventListener("change",e=>{
+  if(e.target && e.target.closest("#vehicleForm,#serviceForm")) scheduleAutoSave();
+});
+window.addEventListener("beforeunload",()=>{try{persist()}catch(e){}});
+function gv(id){return document.getElementById(id).value.trim()}
+function sv(id,v){const e=document.getElementById(id);if(e)e.value=v||""}
+function dateInputValue(v){const s=String(v??"");return /^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(0,10):s}
+let pendingPhoto=null,removePhotoFlag=false;
+function escapeHtml(v){return String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function renderPhotoPreview(src){const b=document.getElementById("photoPreview"),r=document.getElementById("removePhotoBtn");if(src){b.innerHTML='<img class="vehicle-photo" src="'+src+'" alt="Araç fotoğrafı">';r.style.display="inline-flex"}else{b.innerHTML='<div class="photo-placeholder">📷 Araç fotoğrafı eklenmedi</div>';r.style.display="none"}}
+function previewPhoto(input){const f=input.files&&input.files[0];if(!f)return;if(!f.type.startsWith("image/")){alert("Lütfen bir görsel dosyası seçin.");input.value="";return}const rd=new FileReader();rd.onload=e=>{pendingPhoto=e.target.result;removePhotoFlag=false;renderPhotoPreview(pendingPhoto)};rd.readAsDataURL(f)}
+function removePhoto(){pendingPhoto=null;removePhotoFlag=true;document.getElementById("fPhoto").value="";renderPhotoPreview(null)}
+const ADMIN_PASSWORD="112admin";
+// Yönetici oturumu sekme açık kaldığı sürece korunur; sekme/pencere kapanınca sessionStorage temizlenir.
+let adminUnlockedUntil=(sessionStorage.getItem("112_admin_unlocked")==="1" ? Infinity : 0);
+let adminPendingAction=null;
+function requireAdmin(action){
+ if(Date.now()<adminUnlockedUntil){ action(); return true; }
+ adminPendingAction=action;
+ const m=document.getElementById("adminLock");
+ const i=document.getElementById("adminPasswordInput");
+ if(i)i.value="";
+ if(m)m.classList.add("show");
+ setTimeout(()=>i&&i.focus(),50);
+ return false;
+}
+function confirmAdminPassword(){
+ const i=document.getElementById("adminPasswordInput");
+ if(!i)return;
+ if(i.value===ADMIN_PASSWORD){
+   adminUnlockedUntil=Infinity;
+   sessionStorage.setItem("112_admin_unlocked","1");
+   const action=adminPendingAction; adminPendingAction=null; closeAdminLock(); if(typeof action==="function") action();
+ }else{ alert("Yönetici parolası hatalı."); i.select(); }
+}
+function closeAdminLock(){document.getElementById("adminLock")?.classList.remove("show");adminPendingAction=null;}
+function openVehicleForm(index=null){
+ if(Date.now()>=adminUnlockedUntil){ adminPendingAction=()=>openVehicleForm(index); document.getElementById("adminLock").classList.add("show"); setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50); return; }
+ document.getElementById("formTitle").textContent=index===null?"Yeni Araç Ekle":"Araç Düzenle";
+ document.getElementById("editIndex").value=index===null?"":index;
+ const x=index===null?{}:DATA[index]||{};
+ pendingPhoto=x["FOTOĞRAF"]||null;removePhotoFlag=false;setTimeout(()=>renderPhotoPreview(pendingPhoto),0);
+ sv("f_plaka",x["ARAC PLAKASI"]);sv("f_marka",x["MARKASI"]);sv("f_model",x["MODEL YILI"]);sv("f_km",x["KİLOMETRE"]);sv("f_ceker",x["ÇEKER"]);
+ sv("f_gorev",x["GÖREV YERİ"]);sv("f_klima",x["KLİMA DURUMU"]||"AKTİF");sv("f_motor",x["MOTOR SERİ NO"]);sv("f_sasi",x["ŞASİ SERİ NO"]);
+ sv("f_ruhsat",x["RUHSAT BELGE NO"]);sv("f_kasko",x["KASKO"]);sv("f_sigbas",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"]));
+ sv("f_sigbit",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]));sv("f_muybas",dateInputValue(x["MUAYENE BAŞLANGIÇ"]));sv("f_muybit",dateInputValue(x["MUAYENE BİTİŞ"]));sv("f_ekc",dateInputValue(x["EK C MUAYENE"]));
+ document.getElementById("formDetail").classList.add("show");
+}
+function closeVehicleForm(){document.getElementById("formDetail").classList.remove("show")}
+function getAlerts(){
+ const alerts=[];DATA.forEach(x=>{
+   const plate=x["ARAC PLAKASI"]||"Araç";
+   [["Muayene",x["MUAYENE BİTİŞ"]],["Sigorta",x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]]].forEach(([type,date])=>{const d=days(date);if(d<=30)alerts.push({plate,type,date,d,vehicle:x})});
+ });return alerts.sort((a,b)=>a.d-b.d);
+}
+function refreshDashboard(){
+ const total=DATA.length;
+ document.getElementById("total").textContent=total;
+ document.getElementById("activeAc").textContent=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
+ const inspectionRisk=DATA.filter(x=>{let d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90}).length;
+ const insuranceRisk=DATA.filter(x=>{let d=days(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]);return d>=0&&d<=90}).length;
+ document.getElementById("inspection").textContent=inspectionRisk;document.getElementById("insurance").textContent=insuranceRisk;
+ document.getElementById("criticalDocs").textContent=getAlerts().length;
+ document.getElementById("insuredCount").textContent=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
+ document.getElementById("fourByFour").textContent=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*4")).length;
+ const years=DATA.map(x=>Number.parseInt(x["MODEL YILI"],10)).filter(Number.isFinite);
+ const avg=years.length?(new Date().getFullYear()-years.reduce((a,b)=>a+b,0)/years.length):0;
+ document.getElementById("avgAge").textContent=(Math.max(0,avg)).toFixed(1)+" yıl";
+ renderAlerts();renderFleetAnalysis();renderRecentServices();
+ const old=document.getElementById("location").value;const loc=[...new Set(DATA.map(x=>x["GÖREV YERİ"]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
+ document.getElementById("location").innerHTML='<option value="">Tüm görev yerleri</option>'+loc.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join("");if(loc.includes(old))document.getElementById("location").value=old;
+}
+function renderAlerts(){
+ const alerts=getAlerts(),panel=document.getElementById("alertPanel");document.getElementById("alertCount").textContent=alerts.length+" uyarı";panel.style.display=alerts.length?"block":"none";
+ document.getElementById("alertList").innerHTML=alerts.slice(0,12).map(a=>{const when=a.d<0?`${Math.abs(a.d)} gün geçti`:a.d===0?"Bugün":`${a.d} gün kaldı`;return `<div class="alert-item" onclick='openModalByPlate(${JSON.stringify(a.plate)})'><b>🚨 ${escapeHtml(a.plate)} · ${a.type}</b><span>${fmt(a.date)} · ${when}</span></div>`}).join("");
+}
+function renderFleetAnalysis(){
+ const active=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
+ const kasko=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
+ const expired=DATA.filter(x=>days(x["MUAYENE BİTİŞ"])<0||days(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])<0).length;
+ const rows=[['Klima aktif',active,DATA.length],['Kaskolu',kasko,DATA.length],['Belgeleri riskli',expired,DATA.length],['4×4',DATA.filter(x=>normalize(x["ÇEKER"]).includes('4*4')).length,DATA.length]];
+ const box=document.getElementById('fleetAnalysis');box.innerHTML=rows.map(([t,v,max])=>`<div class="progress-row"><div class="progress-meta"><span>${t}</span><span>${v} / ${max||0}</span></div><div class="progress-track"><i style="width:${max?Math.min(100,v/max*100):0}%"></i></div></div>`).join('');
+}
+function renderRecentServices(){
+ const box=document.getElementById('recentServices');
+ if(!SERVICES.length){box.innerHTML='<div class="row"><div class="row-top"><span>Henüz servis kaydı yok</span><span>🛠️</span></div><div class="kpi-note">İlk bakım kaydını eklemek için “+ Servis Kaydı” butonunu kullan.</div></div>';return;}
+ const arr=[...SERVICES].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,2);
+ box.innerHTML=arr.map(s=>`<div class="service-item"><div class="service-top"><span>${escapeHtml(s.plate)}</span><span class="tag">${escapeHtml(s.type)}</span></div><div class="service-meta">${fmt(s.date)} · ${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div>${s.note?`<div class="service-note"><b>Not:</b> ${escapeHtml(s.note)}</div>`:''}<div class="service-actions"><button type="button" class="secondary" onclick="openVehicleByPlate('${String(s.plate).replace(/'/g,"\\'")}')">Araç</button></div></div>`).join('');
+}
+function saveVehicle(e){
+ e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":gv("f_model"),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
+ if(!removePhotoFlag&&pendingPhoto)x["FOTOĞRAF"]=pendingPhoto;else if(removePhotoFlag)x["FOTOĞRAF"]="";
+ const idx=document.getElementById("editIndex").value;
+ if(idx===""){if(DATA.some(v=>normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka zaten kayıtlı.");return}DATA.push(x)}else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=DATA.length){alert("Düzenlenecek araç kaydı bulunamadı.");return}const old=DATA[n];if(DATA.some((v,j)=>j!==n&&normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka başka bir araçta kayıtlı.");return}x["SIRA"]=old["SIRA"]||String(n+1);["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ","ZORUNLU TRAFİK SİGORTASI BİTİŞ","MUAYENE BAŞLANGIÇ","MUAYENE BİTİŞ","EK C MUAYENE"].forEach(k=>{if(!x[k] && old[k]) x[k]=old[k]});DATA[n]={...old,...x}}
+ persist();closeVehicleForm();refreshDashboard();renderLocations();render();
+}
+function editVehicleByPlate(plate){const i=DATA.findIndex(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(i<0){alert("Araç kaydı bulunamadı.");return}closeModal();openVehicleForm(i)}
+function openVehicleByPlate(plate){closeModal();openModalByPlate(plate)}
+function openModalByPlate(plate){const x=DATA.find(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(x)openModal(x);else alert('Araç bulunamadı.');}
+function deleteVehicleByPlate(plate){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteVehicleByPlate(plate);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return}const i=DATA.findIndex(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(i<0){alert("Araç kaydı bulunamadı.");return}const arac=DATA[i]["ARAC PLAKASI"]||plate;if(!confirm(arac+" plakalı aracı silmek istediğinize emin misiniz?"))return;DATA.splice(i,1);SERVICES=SERVICES.filter(s=>normalize(s.plate)!==normalize(plate));persist();closeModal();refreshDashboard();renderLocations();render()}
+function populateServiceVehicles(selected){const e=document.getElementById('s_vehicle');e.innerHTML=DATA.slice().sort((a,b)=>normalize(a['ARAC PLAKASI']).localeCompare(normalize(b['ARAC PLAKASI']))).map(x=>`<option value="${escapeHtml(x['ARAC PLAKASI'])}">${escapeHtml(x['ARAC PLAKASI'])} · ${escapeHtml(x['MARKASI']||'')}</option>`).join('');if(selected)e.value=selected;}
+function openServiceForm(plate='', editIndex=''){
+ if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>openServiceForm(plate,editIndex);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}
+const form=document.getElementById('serviceForm');document.getElementById('serviceEditIndex').value=editIndex===''?'':String(editIndex);populateServiceVehicles(plate);if(editIndex!==''){const s=SERVICES[Number(editIndex)];if(!s)return;document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydını Düzenle';sv('s_date',s.date||'');sv('s_type',s.type||'Periyodik Bakım');sv('s_km',s.km||'');sv('s_cost',s.cost||'');sv('s_nextKm',s.nextKm||'');sv('s_note',s.note||'');sv('s_vehicle',s.plate||plate)}else{document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydı';sv('s_date',new Date().toISOString().slice(0,10));sv('s_type','Periyodik Bakım');sv('s_km','');sv('s_cost','');sv('s_nextKm','');sv('s_note','');}document.getElementById('serviceDetail').classList.add('show');}
+function closeServiceForm(){document.getElementById('serviceDetail').classList.remove('show')}
+
+// Muayene başlangıç tarihi girildiğinde bitiş tarihini otomatik olarak 1 yıl sonrasına ayarlar.
+function autoSetInspectionEndDate(){
+ const start=document.getElementById("f_muybas");
+ const end=document.getElementById("f_muybit");
+ if(!start||!end)return;
+ if(!start.value){end.value="";return;}
+ const d=new Date(start.value+"T00:00:00");
+ if(Number.isNaN(d.getTime()))return;
+ d.setFullYear(d.getFullYear()+1);
+ const y=d.getFullYear();
+ const m=String(d.getMonth()+1).padStart(2,"0");
+ const day=String(d.getDate()).padStart(2,"0");
+ end.value=`${y}-${m}-${day}`;
+}
+function saveService(e){e.preventDefault();const plate=gv('s_vehicle');const r={plate,date:gv('s_date'),type:gv('s_type'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),note:gv('s_note')};const idx=document.getElementById('serviceEditIndex').value;if(idx==='')SERVICES.push(r);else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=SERVICES.length){alert('Düzenlenecek servis kaydı bulunamadı.');return}SERVICES[n]=r;}persist();closeServiceForm();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(plate));if(x)openModal(x)}
+function openServiceForVehicle(plate){openServiceForm(plate)}
+function editService(idx){const s=SERVICES[Number(idx)];if(!s){alert('Servis kaydı bulunamadı.');return}openServiceForm(s.plate,Number(idx))}
+function deleteService(idx){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteService(idx);document.getElementById('adminLock').classList.add('show');setTimeout(()=>document.getElementById('adminPasswordInput')?.focus(),50);return}const s=SERVICES[Number(idx)];if(!s)return;if(!confirm((s.plate||'Araç')+' servis kaydı silinsin mi?'))return;SERVICES.splice(Number(idx),1);persist();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(s.plate));if(x)openModal(x)}
+function renderServiceHistory(plate){const arr=SERVICES.filter(s=>normalize(s.plate)===normalize(plate)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));if(!arr.length)return '<div class="notice">Bu araç için henüz bakım/servis kaydı bulunmuyor.</div>';return '<div class="service-list">'+arr.map(s=>{const idx=SERVICES.indexOf(s);return `<div class="service-item"><div class="service-top"><span>${escapeHtml(s.type)}</span><span>${fmt(s.date)}</span></div><div class="service-meta">${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div><div class="service-note"><b>Not:</b> ${escapeHtml(s.note||'Not yok')}</div><div class="service-actions"><button type="button" class="secondary" onclick="editService(${idx})">✏️ Düzenle</button><button type="button" class="danger-btn" onclick="deleteService(${idx})">🗑️ Sil</button></div></div>`}).join('')+'</div>'}
+function renderServicePage(){
+  const body=document.getElementById('navViewBody');
+  const q=normalize(document.getElementById('servicePageSearch')?.value||'');
+  const type=document.getElementById('servicePageType')?.value||'';
+  const plate=document.getElementById('servicePagePlate')?.value||'';
+  const from=document.getElementById('servicePageFrom')?.value||'';
+  const to=document.getElementById('servicePageTo')?.value||'';
+  const filtered=SERVICES.map((s,i)=>({s,i})).filter(({s})=>{
+    const text=normalize([s.plate,s.type,s.note,s.km,s.cost].join(' '));
+    if(q&&!text.includes(q))return false;
+    if(type&&s.type!==type)return false;
+    if(plate&&normalize(s.plate)!==normalize(plate))return false;
+    if(from&&String(s.date||'')<from)return false;
+    if(to&&String(s.date||'')>to)return false;
+    return true;
+  }).sort((a,b)=>(b.s.date||'').localeCompare(a.s.date||''));
+  const total=SERVICES.length;
+  const totalCost=SERVICES.reduce((sum,s)=>sum+(Number(s.cost)||0),0);
+  const last=SERVICES.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+  const vehicleCount=new Set(SERVICES.map(s=>normalize(s.plate)).filter(Boolean)).size;
+  const types=[...new Set(SERVICES.map(s=>s.type).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'tr'));
+  const plates=[...new Set(SERVICES.map(s=>s.plate).filter(Boolean))].sort((a,b)=>normalize(a).localeCompare(normalize(b),'tr'));
+  const rows=filtered.length?filtered.map(({s,i})=>{
+    const vehicle=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(s.plate));
+    return `<tr>
+      <td><span class="plate">${escapeHtml(s.plate||'—')}</span><span class="sub">${escapeHtml(vehicle?.['GÖREV YERİ']||'')}</span></td>
+      <td>${escapeHtml(fmt(s.date)||'—')}</td>
+      <td><span class="tag">${escapeHtml(s.type||'—')}</span></td>
+      <td>${s.km?Number(s.km).toLocaleString('tr-TR')+' km':'—'}</td>
+      <td>${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':'—'}</td>
+      <td>${s.nextKm?Number(s.nextKm).toLocaleString('tr-TR')+' km':'—'}</td>
+      <td class="service-note-cell">${escapeHtml(s.note||'Not yok')}</td>
+      <td><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="secondary" onclick="editService(${i})">✏️ Düzenle</button><button type="button" class="danger-btn" onclick="deleteService(${i})">🗑️ Sil</button><button type="button" class="secondary" onclick="openModal(DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize('${String(s.plate||'').replace(/'/g,"\\'")}')))" >🚑 Araç</button></div></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="8" class="service-empty">Filtrelere uyan servis kaydı bulunamadı.</td></tr>`;
+  body.innerHTML=`
+    <div class="panel" style="box-shadow:none">
+      <div class="toolbar service-page-toolbar">
+        <input class="search" id="servicePageSearch" placeholder="Plaka, işlem türü, not ara..." value="${escapeHtml(document.getElementById('servicePageSearch')?.value||'')}">
+        <select id="servicePagePlate"><option value="">Tüm araçlar</option>${plates.map(p=>`<option value="${escapeHtml(p)}" ${normalize(p)===normalize(plate)?'selected':''}>${escapeHtml(p)}</option>`).join('')}</select>
+        <select id="servicePageType"><option value="">Tüm işlem türleri</option>${types.map(t=>`<option ${t===type?'selected':''}>${escapeHtml(t)}</option>`).join('')}</select>
+        <input type="date" id="servicePageFrom" value="${escapeHtml(from)}" title="Başlangıç tarihi">
+        <input type="date" id="servicePageTo" value="${escapeHtml(to)}" title="Bitiş tarihi">
+        <button type="button" onclick="openServiceForm()">+ Servis Kaydı</button>
+        <button type="button" class="secondary" onclick="clearServicePageFilters()">Filtreleri Temizle</button>
+      </div>
+      <div class="service-table-wrap"><table class="service-table"><thead><tr><th>Plaka</th><th>Tarih</th><th>İşlem</th><th>Km</th><th>Maliyet</th><th>Sonraki Km</th><th>Not</th><th>İşlemler</th></tr></thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+  ['servicePageSearch','servicePagePlate','servicePageType','servicePageFrom','servicePageTo'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderServicePage));
+}
+function clearServicePageFilters(){
+  ['servicePageSearch','servicePageFrom','servicePageTo'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  ['servicePagePlate','servicePageType'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+  renderServicePage();
+}
+function exportBackup(){const payload={version:2,exportedAt:new Date().toISOString(),vehicles:DATA,services:SERVICES};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='112_filo_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function importBackup(input){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>importBackup(input);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];persist();refreshDashboard();renderLocations();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
+
+document.addEventListener("keydown",e=>{if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
+function init(){
+ loadSaved();
+ document.getElementById("today").textContent=getToday().toLocaleDateString("tr-TR"); const loc=[...new Set(DATA.map(x=>x["GÖREV YERİ"]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
+ document.getElementById("location").innerHTML='<option value="">Tüm görev yerleri</option>'+loc.map(x=>`<option>${x}</option>`).join("");
+ refreshDashboard(); render();
+ ["search","location","condition"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+}
+function render(){
+ const q=normalize(document.getElementById("search").value), loc=document.getElementById("location").value, cond=document.getElementById("condition").value;
+ const rows=DATA.filter(x=>{
+   const hay=Object.values(x).map(normalize).join(" ");
+   const match=!q||hay.includes(q), ml=!loc||x["GÖREV YERİ"]===loc;
+   const cs=docStatus(x["MUAYENE BİTİŞ"]);
+   const matchc=!cond||cs===cond||docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])===cond;
+   return match&&ml&&matchc;
+ });
+ document.getElementById("count").textContent=`${rows.length} kayıt`;
+ document.getElementById("tbody").innerHTML=rows.map(x=>`<tr onclick='openModal(${JSON.stringify(x)})'>
+ <td><span class="plate">${x["ARAC PLAKASI"]||"—"}</span><span class="sub">${x["RUHSAT BELGE NO"]||""}</span></td>
+ <td>${x["MARKASI"]||"—"}</td><td>${x["MODEL YILI"]?String(x["MODEL YILI"]).replace(/\.0$/,"" ) : "—"}</td><td>${x["ÇEKER"]||"—"}</td>
+ <td>${x["GÖREV YERİ"]||"—"}</td><td>${status(x["MUAYENE BİTİŞ"])}<span class="sub">${fmt(x["MUAYENE BİTİŞ"])}</span></td>
+ <td>${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}<span class="sub">${fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</span></td>
+ <td>${x["EK C MUAYENE"]?((String(x["EK C MUAYENE"]).toUpperCase()==="MUAF")?'<span class="status ok">MUAF</span>':`<span class="sub">${fmt(x["EK C MUAYENE"])}</span>`):"—"}</td>
+ <td>${normalize(x["KASKO"])==="evet"?'<span class="status ok">EVET</span>':'<span class="status danger">HAYIR</span>'}</td>
+ <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td></tr>`).join("");
+}
+function openModal(x){
+ document.getElementById("mTitle").textContent=x["ARAC PLAKASI"]||"Araç";
+ document.getElementById("mSub").textContent=`${x["MARKASI"]||""} · ${x["GÖREV YERİ"]||""}`;
+ const fields=[["Marka",x["MARKASI"]],["Model Yılı",x["MODEL YILI"]],["Kilometre",x["KİLOMETRE"]?Number(x["KİLOMETRE"]).toLocaleString('tr-TR')+' km':"—"],["Çeker",x["ÇEKER"]],["Görev Yeri",x["GÖREV YERİ"]],["Motor Seri No",x["MOTOR SERİ NO"]],["Şasi Seri No",x["ŞASİ SERİ NO"]],["Ruhsat Belge No",x["RUHSAT BELGE NO"]],["Kasko",x["KASKO"]],["Klima",x["KLİMA DURUMU"]],["Sigorta Başlangıç",fmt(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"])],["Sigorta Bitiş",fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])],["Muayene Başlangıç",fmt(x["MUAYENE BAŞLANGIÇ"])],["Muayene Bitiş",fmt(x["MUAYENE BİTİŞ"])],["Ek C Muayene",x["EK C MUAYENE"]?.startsWith("202")?fmt(x["EK C MUAYENE"]):x["EK C MUAYENE"]]];
+ document.getElementById("mBody").innerHTML=(x["FOTOĞRAF"]?'<img class="detail-photo" src="'+x["FOTOĞRAF"]+'" alt="Araç fotoğrafı">':"")+`<div class="notice">Muayene: ${status(x["MUAYENE BİTİŞ"])} &nbsp; Sigorta: ${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</div><div class="facts">${fields.map(([a,b])=>`<div class="fact"><b>${a}</b><span>${escapeHtml(b||"—")}</span></div>`).join("")}</div><div class="panel" style="margin-top:14px;overflow:visible"><div class="panel-head"><h2>🛠️ Bakım & Servis Geçmişi</h2><span class="spacer"><button type="button" id="addServiceForVehicleBtn">+ Kayıt Ekle</button></span></div><div style="padding:12px">${renderServiceHistory(x["ARAC PLAKASI"])}</div></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" id="detailEditBtn">✏️ Düzenle</button><button type="button" id="detailDeleteBtn" class="danger-btn">🗑️ Sil</button></div>`;
+ document.getElementById("detailEditBtn").onclick=e=>{e.preventDefault();editVehicleByPlate(x["ARAC PLAKASI"])};document.getElementById("detailDeleteBtn").onclick=e=>{e.preventDefault();deleteVehicleByPlate(x["ARAC PLAKASI"])};const addServiceBtn=document.getElementById("addServiceForVehicleBtn");if(addServiceBtn){addServiceBtn.onclick=e=>{e.preventDefault();e.stopPropagation();openServiceForVehicle(x["ARAC PLAKASI"]||"");};}document.getElementById("detail").classList.add("show");
+}
+function closeModal(){document.getElementById("detail").classList.remove("show")}
+document.getElementById("detail").addEventListener("click",e=>{if(e.target.id==="detail")closeModal()});
+document.getElementById("formDetail").addEventListener("click",e=>{if(e.target.id==="formDetail")closeVehicleForm()});
+document.getElementById("serviceDetail").addEventListener("click",e=>{if(e.target.id==="serviceDetail")closeServiceForm()});
+document.getElementById("f_muybas").addEventListener("change",autoSetInspectionEndDate);
+function closeNavView(){document.body.classList.remove("service-page","menu-page");document.getElementById("navView").style.display="none";}
+function showHomePage(){
+  document.body.classList.remove("vehicle-page","service-page");
+  document.getElementById("navView").style.display="none";
+  document.querySelectorAll("aside .nav").forEach(x=>x.classList.toggle("active",x.dataset.nav==="overview"));
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function showVehiclesPage(){
+  document.body.classList.remove("service-page");
+  document.body.classList.add("vehicle-page");
+  document.getElementById("navView").style.display="none";
+  document.querySelectorAll("aside .nav").forEach(x=>x.classList.toggle("active",x.dataset.nav==="vehicles"));
+  window.scrollTo({top:0,behavior:"smooth"});
+  setTimeout(()=>document.getElementById("search")?.focus(),150);
+}
+function escapeHtmlSafe(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));}
+function openNavView(kind){
+  document.body.classList.remove("vehicle-page","service-page","menu-page");
+  document.querySelectorAll("aside .nav").forEach(x=>x.classList.toggle("active",x.dataset.nav===kind));
+  const view=document.getElementById("navView"), title=document.getElementById("navViewTitle"), body=document.getElementById("navViewBody");
+  if(kind==="overview"){showHomePage();return;}
+  if(kind==="vehicles"){showVehiclesPage();return;}
+  document.body.classList.add("menu-page");
+  view.style.display="block";
+  if(kind==="locations"){
+    title.textContent="📍 Görev Yerleri ve Araçlar";
+    const grouped={};
+    DATA.forEach(x=>{
+      const k=(x["GÖREV YERİ"]||"Belirtilmemiş").trim();
+      if(!grouped[k]) grouped[k]=[];
+      grouped[k].push(x["ARAC PLAKASI"]||"Plakasız");
+    });
+    body.innerHTML='<div class="mini-list">'+Object.entries(grouped)
+      .sort((a,b)=>a[0].localeCompare(b[0],"tr"))
+      .map(([k,plates])=>`<div class="mini-item"><b>📍 ${escapeHtmlSafe(k)}</b><div style="margin-top:8px;color:#667085;font-size:12px">${plates.length} araç</div><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">${plates.map(pl=>`<span class="status ok" style="background:#eef5ff;color:#175dcc">${escapeHtmlSafe(String(pl).trim())}</span>`).join('')}</div></div>`)
+      .join('')+'</div>';
+  }
+  if(kind==="insurance"){
+    title.textContent="🛡️ Sigorta & Kasko";
+    const risk=DATA.filter(x=>docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])!=="ok");
+    const noKasko=DATA.filter(x=>normalize(x["KASKO"])!=="evet");
+    body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam Araç</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">Sigorta Riski</div><div class="metric danger">${risk.length}</div></div><div class="card"><div class="label">Kaskolu</div><div class="metric ok">${DATA.filter(x=>normalize(x["KASKO"])==='evet').length}</div></div><div class="card"><div class="label">Kaskosuz</div><div class="metric warn">${noKasko.length}</div></div></div><div class="notice" style="margin-top:14px">Riskli sigorta kayıtlarını aşağıdaki araç listesinde filtrelemek için “Belge durumu” filtresini kullanabilirsiniz.</div>`;
+  }
+  if(kind==="inspection"){
+    title.textContent="🔧 Muayene";
+    const risk=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])!=="ok");
+    const next90=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90});
+    body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam Araç</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">90 Gün İçinde</div><div class="metric warn">${next90.length}</div></div><div class="card"><div class="label">Riskli / Geçmiş</div><div class="metric danger">${risk.length}</div></div><div class="card"><div class="label">Uygun</div><div class="metric ok">${DATA.length-risk.length}</div></div></div>`;
+  }
+  if(kind==="ac"){
+    title.textContent="❄️ Klima Durumu";
+    const active=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==='aktif').length;
+    body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">Aktif</div><div class="metric ok">${active}</div></div><div class="card"><div class="label">Pasif</div><div class="metric warn">${DATA.length-active}</div></div><div class="card"><div class="label">Aktif Oran</div><div class="metric">${DATA.length?Math.round(active/DATA.length*100):0}%</div></div></div>`;
+  }
+  if(kind==="services"){
+    document.body.classList.add("service-page");
+    title.textContent="🛠️ Servis Kayıtları";
+    renderServicePage();
+  }
+  if(kind==="reports"){
+    title.textContent="📊 Raporlar";
+    const ford=DATA.filter(x=>normalize(x["MARKASI"]).includes("ford")).length, four=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*4")).length;
+    body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam Araç</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">4×4</div><div class="metric">${four}</div></div><div class="card"><div class="label">Ford</div><div class="metric">${ford}</div></div><div class="card"><div class="label">Servis Kaydı</div><div class="metric">${SERVICES.length}</div></div></div><div class="notice" style="margin-top:14px">Detaylı veri çıktısı ve veri yedekleme işlemleri <b>Ayarlar</b> sayfasından yapılabilir.</div>`;
+  }
+  if(kind==="settings"){
+    title.textContent="⚙️ Ayarlar";
+    body.innerHTML=`<div class="action-row"><span class="admin-badge">🔒 Yönetici gerekli</span><button type="button" onclick="downloadCSV()">CSV Dışa Aktar</button><button type="button" class="secondary" onclick="exportBackup()">⬇️ Yedek Al</button><button type="button" class="secondary" onclick="document.getElementById('backupInput').click()">⬆️ Yedek Yükle</button><input id="backupInput" type="file" accept="application/json" style="display:none" onchange="importBackup(this)"></div><div class="notice">Veriler bu tarayıcıda yerel olarak saklanır. CSV dışa aktarma ve JSON yedekleme işlemleri bu sayfadan yapılır.</div>`;
+  }
+  view.scrollIntoView({behavior:"smooth",block:"start"});
+}
+document.querySelectorAll("aside .nav").forEach(n=>n.addEventListener("click",()=>openNavView(n.dataset.nav)));
+function downloadCSV(){
+ const cols=Object.keys(DATA[0]||{}); const esc=v=>`"${String(v??"").replaceAll('"','""')}"`;
+ const csv="\uFEFF"+[cols.map(esc),...DATA.map(r=>cols.map(c=>esc(r[c])))].map(r=>r.join(";")).join("\n");
+ const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="2026_arac_takip_listesi.csv";a.click();
+}
+init();
+setInterval(()=>{const el=document.getElementById("today");if(el)el.textContent=getToday().toLocaleDateString("tr-TR");},60000);
+</script>
+<script>
+// Sağ tık menüsünü devre dışı bırak
+window.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+</script>
+
+<script>
+(function(){
+  const originalPersist=window.persist;
+  if(typeof originalPersist!=="function") return;
+  window.persist=function(){
+    const ok=originalPersist();
+    if(ok){
+      const el=document.getElementById("autoSaveStatus");
+      if(el){el.textContent="✓ Otomatik kaydedildi";el.style.opacity="1";setTimeout(()=>el.style.opacity=".65",1800);}
+    }
+    return ok;
+  };
+})();
+</script>
+</body></html>

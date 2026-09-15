@@ -1,0 +1,9 @@
+{
+  "name":"112-filo-site",
+  "version":"1.0.0",
+  "private":true,
+  "description":"112 Filo Yönetim Sistemi - basit yayın sürümü",
+  "main":"server.js",
+  "scripts":{"start":"node server.js"},
+  "dependencies":{"express":"^4.21.2"}
+}
