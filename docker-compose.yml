@@ -1,0 +1,35 @@
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: 112_filo
+      POSTGRES_USER: 112_filo_app
+      POSTGRES_PASSWORD: change-this-db-password
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./db/001_schema.sql:/docker-entrypoint-initdb.d/001_schema.sql:ro
+      - ./db/002_seed_vehicles.sql:/docker-entrypoint-initdb.d/002_seed_vehicles.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U 112_filo_app -d 112_filo"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  web:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://112_filo_app:change-this-db-password@db:5432/112_filo
+      ADMIN_PASSWORD: change-this-admin-password
+      SESSION_SECRET: change-this-long-random-session-secret
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
