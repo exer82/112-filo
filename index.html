@@ -110,6 +110,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
   .brand small{display:none}
   .mobile-menu-toggle{width:42px;height:42px;flex-basis:42px}
 }
+.settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:16px}.settings-card{border:1px solid #e5e7eb;border-radius:14px;padding:18px;background:#fff}.settings-card h3{margin:0 0 6px}.settings-card p{margin:0 0 14px;color:#667085;font-size:13px}.settings-card label{display:block;font-size:13px;font-weight:600;margin-top:10px}.settings-card input{display:block;width:100%;box-sizing:border-box;margin-top:6px;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px}.settings-card button{margin-top:14px}@media(max-width:700px){.settings-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body class="locked-site">
@@ -328,43 +329,99 @@ function escapeHtml(v){return String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;',
 
 
 
-const ADMIN_PASSWORD="112admin";
-// Yönetici oturumu sekme açık kaldığı sürece korunur; sekme/pencere kapanınca sessionStorage temizlenir.
-let adminUnlockedUntil=(sessionStorage.getItem("112_admin_unlocked")==="1" ? Infinity : 0);
+const DEFAULT_PASSWORD="112admin";
+const SITE_PASSWORD_KEY="112_site_password_hash";
+const ADMIN_PASSWORD_KEY="112_admin_password_hash";
+// Şifreler tarayıcıda düz metin yerine mümkünse SHA-256 özeti olarak tutulur.
+async function hashPassword(value){
+  const text=String(value??"");
+  if(window.crypto?.subtle){
+    const data=new TextEncoder().encode(text);
+    const hash=await crypto.subtle.digest("SHA-256",data);
+    return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,"0")).join("");
+  }
+  // Eski/tarayıcı uyumluluğu için zayıf fallback; gerçek güvenlik sunucu tarafında yapılmalıdır.
+  return btoa(unescape(encodeURIComponent(text)));
+}
+async function passwordMatches(value,key){
+  const stored=localStorage.getItem(key);
+  if(stored) return (await hashPassword(value))===stored;
+  return String(value??"")===DEFAULT_PASSWORD;
+}
+async function ensurePasswordHashes(){
+  if(!localStorage.getItem(SITE_PASSWORD_KEY)) localStorage.setItem(SITE_PASSWORD_KEY,await hashPassword(DEFAULT_PASSWORD));
+  if(!localStorage.getItem(ADMIN_PASSWORD_KEY)) localStorage.setItem(ADMIN_PASSWORD_KEY,await hashPassword(DEFAULT_PASSWORD));
+}
+// Site parolası ile yönetici parolası bilinçli olarak ayrıdır.
+let adminUnlockedUntil=sessionStorage.getItem("112_admin_unlocked")==="1"?Infinity:0;
 let adminPendingAction=null;
-function enterSite(){
- const i=document.getElementById("sitePasswordInput");
- if(i&&i.value===ADMIN_PASSWORD){
-   sessionStorage.setItem("112_site_unlocked","1");
-   adminUnlockedUntil=Infinity;
-   sessionStorage.setItem("112_admin_unlocked","1");
-   document.body.classList.remove("locked-site");
-   document.getElementById("siteGate")?.classList.remove("show");
- }else{ alert("Yönetici parolası hatalı."); i?.select(); }
+async function enterSite(){
+  const i=document.getElementById("sitePasswordInput");
+  if(!i)return;
+  if(await passwordMatches(i.value,SITE_PASSWORD_KEY)){
+    await ensurePasswordHashes();
+    sessionStorage.setItem("112_site_unlocked","1");
+    document.body.classList.remove("locked-site");
+    document.getElementById("siteGate")?.classList.remove("show");
+    i.value="";
+  }else{ alert("Site parolası hatalı."); i.select(); }
 }
-function initSiteGate(){
- if(sessionStorage.getItem("112_site_unlocked")==="1"){
-   adminUnlockedUntil=Infinity;
-   sessionStorage.setItem("112_admin_unlocked","1");
-   document.body.classList.remove("locked-site");
-   document.getElementById("siteGate")?.classList.remove("show");
- }else{
-   document.body.classList.add("locked-site");
-   document.getElementById("siteGate")?.classList.add("show");
-   setTimeout(()=>document.getElementById("sitePasswordInput")?.focus(),50);
- }
+async function initSiteGate(){
+  await ensurePasswordHashes();
+  // Yönetici oturumu sekme açık kaldığı sürece sessionStorage ile korunur.
+  // Tarayıcı sekmesi kapandığında sessionStorage temizleneceği için yeniden parola istenir.
+  if(sessionStorage.getItem("112_site_unlocked")==="1"){
+    document.body.classList.remove("locked-site");
+    document.getElementById("siteGate")?.classList.remove("show");
+  }else{
+    document.body.classList.add("locked-site");
+    document.getElementById("siteGate")?.classList.add("show");
+    setTimeout(()=>document.getElementById("sitePasswordInput")?.focus(),50);
+  }
 }
-function confirmAdminPassword(){
- const i=document.getElementById("adminPasswordInput");
- if(!i)return;
- if(i.value===ADMIN_PASSWORD){
-   adminUnlockedUntil=Infinity;
-   sessionStorage.setItem("112_admin_unlocked","1");
-   const action=adminPendingAction; adminPendingAction=null; closeAdminLock(); if(typeof action==="function") action();
- }else{ alert("Yönetici parolası hatalı."); i.select(); }
+async function confirmAdminPassword(){
+  const i=document.getElementById("adminPasswordInput");
+  if(!i)return;
+  if(await passwordMatches(i.value,ADMIN_PASSWORD_KEY)){
+    await ensurePasswordHashes();
+    adminUnlockedUntil=Infinity;
+    sessionStorage.setItem("112_admin_unlocked","1");
+    const action=adminPendingAction; adminPendingAction=null; closeAdminLock();
+    if(typeof action==="function") action();
+  }else{ alert("Yönetici parolası hatalı."); i.select(); }
 }
-function closeAdminLock(){document.getElementById("adminLock")?.classList.remove("show");adminPendingAction=null;}
+function closeAdminLock(){document.getElementById("adminLock")?.classList.remove("show");adminPendingAction=null;const i=document.getElementById("adminPasswordInput");if(i)i.value="";}
+function requireAdmin(action){
+  if(Date.now()<adminUnlockedUntil){action();return true;}
+  adminPendingAction=action;
+  document.getElementById("adminLock")?.classList.add("show");
+  setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);
+  return false;
+}
+async function changePassword(kind,currentValue,newValue,confirmValue){
+  const key=kind==="site"?SITE_PASSWORD_KEY:ADMIN_PASSWORD_KEY;
+  const label=kind==="site"?"Site":"Yönetici";
+  if(!newValue || newValue.length<4) throw new Error(label+" parolası en az 4 karakter olmalı.");
+  if(newValue!==confirmValue) throw new Error("Yeni parola ve tekrarı aynı değil.");
+  if(!(await passwordMatches(currentValue,ADMIN_PASSWORD_KEY))) throw new Error("Mevcut yönetici parolası hatalı.");
+  localStorage.setItem(key,await hashPassword(newValue));
+  return label+" parolası başarıyla değiştirildi.";
+}
+async function saveSecuritySettings(kind){
+  if(Date.now()>=adminUnlockedUntil){return requireAdmin(()=>saveSecuritySettings(kind));}
+  const prefix=kind==="site"?"site":"admin";
+  const current=document.getElementById(prefix+"CurrentPassword")?.value||"";
+  const next=document.getElementById(prefix+"NewPassword")?.value||"";
+  const confirm=document.getElementById(prefix+"ConfirmPassword")?.value||"";
+  try{
+    const msg=await changePassword(kind,current,next,confirm);
+    document.getElementById(prefix+"CurrentPassword").value="";document.getElementById(prefix+"NewPassword").value="";document.getElementById(prefix+"ConfirmPassword").value="";
+    alert(msg);
+  }catch(err){alert(err.message||"Parola değiştirilemedi.");}
+}
+
 function openVehicleForm(index=null){
+ if(Date.now()>=adminUnlockedUntil){requireAdmin(()=>openVehicleForm(index));return;}
  document.getElementById("formTitle").textContent=index===null?"Yeni Araç Ekle":"Araç Düzenle";
  document.getElementById("editIndex").value=index===null?"":index;
  const x=index===null?{}:DATA[index]||{};
@@ -444,7 +501,8 @@ async function persistAndReload(){
 }
 
 async function saveVehicle(e){
- e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":String(gv("f_model")).replace(/\.0+$/,"" ),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ÜRETİCİ FİRMA":gv("f_uretici"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
+ e.preventDefault();
+ if(Date.now()>=adminUnlockedUntil){requireAdmin(()=>document.getElementById("vehicleForm")?.requestSubmit());return;}const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":String(gv("f_model")).replace(/\.0+$/,"" ),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ÜRETİCİ FİRMA":gv("f_uretici"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
 
  const idx=document.getElementById("editIndex").value;
  if(idx===""){if(DATA.some(v=>normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka zaten kayıtlı.");return}DATA.push(x)}else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=DATA.length){alert("Düzenlenecek araç kaydı bulunamadı.");return}const old=DATA[n];if(DATA.some((v,j)=>j!==n&&normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka başka bir araçta kayıtlı.");return}x["SIRA"]=old["SIRA"]||String(n+1);["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ","ZORUNLU TRAFİK SİGORTASI BİTİŞ","MUAYENE BAŞLANGIÇ","MUAYENE BİTİŞ","EK C MUAYENE"].forEach(k=>{if(!x[k] && old[k]) x[k]=old[k]});DATA[n]={...old,...x}}
@@ -506,6 +564,7 @@ function toggleMechanicalNote(){
 }
 async function saveService(e){
  e.preventDefault();
+ if(Date.now()>=adminUnlockedUntil){requireAdmin(()=>document.getElementById("serviceForm")?.requestSubmit());return;}
  const plate=gv('s_vehicle');
  const r={plate,date:gv('s_date'),type:gv('s_type'),faultType:gv('s_faultType'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),company:gv('s_company'),status:normalizeServiceStatus(gv('s_status')),note:gv('s_note')};
  const idx=document.getElementById('serviceEditIndex').value;
@@ -520,6 +579,7 @@ async function saveService(e){
 function openServiceForVehicle(plate){openServiceForm(plate)}
 function editService(idx){const s=SERVICES[Number(idx)];if(!s){alert('Servis kaydı bulunamadı.');return}openServiceForm(s.plate,Number(idx))}
 function deleteService(idx){
+ if(Date.now()>=adminUnlockedUntil){requireAdmin(()=>deleteService(idx));return;}
  const n=Number(idx);
  const s=SERVICES[n];
  if(!s){alert('Servis kaydı bulunamadı.');return}
@@ -583,8 +643,8 @@ function clearServicePageFilters(){
   ['servicePagePlate','servicePageType'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
   renderServicePage();
 }
-function exportBackup(){const payload={version:2,exportedAt:new Date().toISOString(),vehicles:DATA,services:SERVICES};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='112_filo_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
-function importBackup(input){const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];normalizeAllServiceStatuses();persist();refreshLocationFilter();refreshDashboard();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
+function exportBackup(){if(Date.now()>=adminUnlockedUntil){requireAdmin(exportBackup);return;}const payload={version:2,exportedAt:new Date().toISOString(),vehicles:DATA,services:SERVICES};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='112_filo_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
+function importBackup(input){if(Date.now()>=adminUnlockedUntil){requireAdmin(()=>{const el=document.getElementById("backupInput");if(el)el.click();});return;}const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];normalizeAllServiceStatuses();persist();refreshLocationFilter();refreshDashboard();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
 
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("menu-open")){closeMobileMenu();return;} if(document.getElementById("siteGate")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();enterSite()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
 function refreshLocationFilter(){
@@ -596,7 +656,7 @@ function refreshLocationFilter(){
  if(loc.includes(current)) el.value=current;
 }
 async function init(){
- initSiteGate();
+ await initSiteGate();
  document.getElementById("today").textContent=getToday().toLocaleDateString("tr-TR");
  await loadSaved();
  refreshLocationFilter();
@@ -660,6 +720,7 @@ function openNavView(kind){
   const view=document.getElementById("navView"), title=document.getElementById("navViewTitle"), body=document.getElementById("navViewBody");
   if(kind==="overview"){showHomePage();return;}
   if(kind==="vehicles"){showVehiclesPage();return;}
+  if(kind==="settings" && Date.now()>=adminUnlockedUntil){requireAdmin(()=>openNavView("settings"));return;}
   document.body.classList.add("menu-page");
   view.style.display="block";
   if(kind==="locations"){
@@ -820,7 +881,7 @@ function openNavView(kind){
   }
     if(kind==="settings"){
     title.textContent="⚙️ Ayarlar";
-    body.innerHTML=`<div class="action-row"><span class="admin-badge">🔒 Yönetici gerekli</span><button type="button" onclick="downloadCSV()">CSV Dışa Aktar</button><button type="button" class="secondary" onclick="exportBackup()">⬇️ Yedek Al</button><button type="button" class="secondary" onclick="document.getElementById('backupInput').click()">⬆️ Yedek Yükle</button><input id="backupInput" type="file" accept="application/json" style="display:none" onchange="importBackup(this)"></div><div class="notice">Veriler bu tarayıcıda yerel olarak saklanır. CSV dışa aktarma ve JSON yedekleme işlemleri bu sayfadan yapılır.</div>`;
+    body.innerHTML=`<div class="action-row"><span class="admin-badge">🔒 Yönetici yetkisi</span><button type="button" onclick="downloadCSV()">CSV Dışa Aktar</button><button type="button" class="secondary" onclick="exportBackup()">⬇️ Yedek Al</button><button type="button" class="secondary" onclick="document.getElementById('backupInput').click()">⬆️ Yedek Yükle</button><input id="backupInput" type="file" accept="application/json" style="display:none" onchange="importBackup(this)"></div><div class="notice">Site erişim parolası ile kayıt ekleme/düzenleme/silme için kullanılan yönetici parolası ayrıdır. Parola değişiklikleri mevcut yönetici parolası doğrulandıktan sonra yapılır.</div><div class="settings-grid"><div class="settings-card"><h3>🔐 Site Erişim Parolası</h3><p>Site açılırken istenecek parolayı değiştirin.</p><label>Mevcut yönetici parolası<input id="siteCurrentPassword" type="password" autocomplete="current-password"></label><label>Yeni site parolası<input id="siteNewPassword" type="password" autocomplete="new-password"></label><label>Yeni site parolası tekrar<input id="siteConfirmPassword" type="password" autocomplete="new-password"></label><button type="button" onclick="saveSecuritySettings('site')">Site Parolasını Değiştir</button></div><div class="settings-card"><h3>🛡️ Yönetici Parolası</h3><p>Araç/servis ekleme, düzenleme, silme ve yönetim işlemleri için kullanılır.</p><label>Mevcut yönetici parolası<input id="adminCurrentPassword" type="password" autocomplete="current-password"></label><label>Yeni yönetici parolası<input id="adminNewPassword" type="password" autocomplete="new-password"></label><label>Yeni yönetici parolası tekrar<input id="adminConfirmPassword" type="password" autocomplete="new-password"></label><button type="button" onclick="saveSecuritySettings('admin')">Yönetici Parolasını Değiştir</button></div></div><div class="notice"><b>Güvenlik notu:</b> Bu HTML uygulamasında parola koruması istemci tarafındadır; dosyaya erişen teknik bir kişi bunu aşabilir. Gerçek güvenlik için API/sunucu tarafında kullanıcı doğrulaması ve yetkilendirme de uygulanmalıdır.</div>`;
   }
   view.scrollIntoView({behavior:"smooth",block:"start"});
 }
