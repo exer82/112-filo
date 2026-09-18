@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Araç Takip Sistemi</title>
 <style>
-  
+
 .admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6e9ef;--primary:#1769e0;--primary2:#0f56bd;--ok:#159957;--warn:#e9a400;--danger:#dc3545;--shadow:0 8px 28px rgba(20,32,55,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
@@ -108,7 +108,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="admin-lock show" id="siteGate">
   <div class="lock-box">
     <div class="lock-icon">🔐</div>
-    <h3>Araç Takip Sistemi</h3>
+    <h3>Giresun Ambulans Takip Sistemi</h3>
     <p>Siteye erişmek için yönetici parolasını girin.</p>
     <input type="password" id="sitePasswordInput" autocomplete="current-password" placeholder="Yönetici parolası">
     <div class="lock-actions"><button type="button" onclick="enterSite()">Giriş Yap</button></div>
@@ -118,7 +118,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <header>
   <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü aç" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
   <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
-  <div class="brand">Araç Takip Sistemi<small>İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="brand">Araç Takip Sistemi <small>İl Ambulans Servisi Başhekimliği</small></div>
   <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
 </header>
 <div class="layout">
