@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Giresun Ambulans Takip Sistemi</title>
 <style>
-.admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
+.admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6e9ef;--primary:#1769e0;--primary2:#0f56bd;--ok:#159957;--warn:#e9a400;--danger:#dc3545;--shadow:0 8px 28px rgba(20,32,55,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
 header{height:78px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:18px;position:sticky;top:0;z-index:20;position:sticky}
@@ -35,7 +35,17 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 #serviceDetail{z-index:100}#formDetail{z-index:90}#detail{z-index:50}.service-note{margin-top:7px;font-size:12px;color:#344054;background:#f6f8fb;border-radius:8px;padding:7px 9px}
 .service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}<style>@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}</style></style>
 </head>
-<body>
+<body class="locked-site">
+<div class="admin-lock show" id="siteGate">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div>
+    <h3>Giresun Ambulans Takip Sistemi</h3>
+    <p>Siteye erişmek için yönetici parolasını girin.</p>
+    <input type="password" id="sitePasswordInput" autocomplete="current-password" placeholder="Yönetici parolası">
+    <div class="lock-actions"><button type="button" onclick="enterSite()">Giriş Yap</button></div>
+    <div class="kpi-note" style="text-align:center;margin-top:10px">Yetkisiz erişim engellenmiştir.</div>
+  </div>
+</div>
 <header>
   <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
   <div class="brand">Giresun Ambulans Takip Sistemi <small>Giresun İl Ambulans Servisi Başhekimliği</small></div>
@@ -85,7 +95,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
         <select id="condition"><option value="">Belge durumu</option><option value="ok">Uygun</option><option value="warn">Yaklaşıyor</option><option value="danger">Riskli</option></select>
       </div>
       <div class="table-wrap"><table><thead><tr>
-        <th>Plaka</th><th>Marka / Model</th><th>Model</th><th>Çeker</th><th>Görev Yeri</th><th>Muayene</th><th>Sigorta</th><th>Ek C Muayene</th><th>Kasko</th><th>Klima</th>
+        <th>Plaka</th><th>Marka / Model</th><th>Model</th><th>Çeker</th><th>Görev Yeri</th><th>Muayene</th><th>Sigorta</th><th>Ek C Muayene</th><th>Kasko</th><th>Klima</th><th>Üretici Firma</th>
       </tr></thead><tbody id="tbody"></tbody></table></div>
     </section>
   </div>
@@ -113,6 +123,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="fact"><b>Şasi Seri No</b><input id="f_sasi"></div>
 <div class="fact"><b>Ruhsat Belge No</b><input id="f_ruhsat"></div>
 <div class="fact"><b>Kasko</b><select id="f_kasko"><option>EVET</option><option>HAYIR</option></select></div>
+<div class="fact"><b>Üretici Firma</b><select id="f_uretici"><option value="">Seçiniz</option><option>EMS</option><option>AC</option><option>DORSER</option></select></div>
 <div class="fact"><b>Sigorta Başlangıç</b><input type="date" id="f_sigbas"></div>
 <div class="fact"><b>Sigorta Bitiş</b><input type="date" id="f_sigbit"></div>
 <div class="fact"><b>Muayene Başlangıç</b><input type="date" id="f_muybas"></div>
@@ -129,6 +140,8 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="fact"><b>Kilometre</b><input type="number" id="s_km" min="0"></div>
 <div class="fact"><b>Maliyet (₺)</b><input type="number" id="s_cost" min="0" step="0.01"></div>
 <div class="fact"><b>Sonraki Bakım Km</b><input type="number" id="s_nextKm" min="0"></div>
+<div class="fact"><b>Bakım / Onarım Firması</b><input id="s_company" placeholder="Firma adı"></div>
+<div class="fact"><b>Bakım Durumu</b><select id="s_status"><option>Talep Aşamasında</option><option>Onarımda</option><option>Tamamlandı</option></select></div>
 </div><div class="fact" style="margin-top:10px"><b>Not</b><input id="s_note" placeholder="Yapılan işlem / parça / açıklama"></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" onclick="closeServiceForm()">İptal</button><button type="submit" class="success-btn">💾 Kaydet</button></div></form></div></div></div>
 <div class="detail" id="detail"><div class="modal"><div class="modal-head"><div><b id="mTitle"></b><div class="sub" id="mSub"></div></div><button class="x" onclick="closeModal()">Kapat</button></div><div class="modal-body" id="mBody"></div></div></div>
 
@@ -229,6 +242,24 @@ const ADMIN_PASSWORD="112admin";
 // Yönetici oturumu sekme açık kaldığı sürece korunur; sekme/pencere kapanınca sessionStorage temizlenir.
 let adminUnlockedUntil=(sessionStorage.getItem("112_admin_unlocked")==="1" ? Infinity : 0);
 let adminPendingAction=null;
+function enterSite(){
+ const i=document.getElementById("sitePasswordInput");
+ if(i&&i.value===ADMIN_PASSWORD){
+   sessionStorage.setItem("112_site_unlocked","1");
+   document.body.classList.remove("locked-site");
+   document.getElementById("siteGate")?.classList.remove("show");
+ }else{ alert("Yönetici parolası hatalı."); i?.select(); }
+}
+function initSiteGate(){
+ if(sessionStorage.getItem("112_site_unlocked")==="1"){
+   document.body.classList.remove("locked-site");
+   document.getElementById("siteGate")?.classList.remove("show");
+ }else{
+   document.body.classList.add("locked-site");
+   document.getElementById("siteGate")?.classList.add("show");
+   setTimeout(()=>document.getElementById("sitePasswordInput")?.focus(),50);
+ }
+}
 function requireAdmin(action){
  if(Date.now()<adminUnlockedUntil){ action(); return true; }
  adminPendingAction=action;
@@ -256,7 +287,7 @@ function openVehicleForm(index=null){
  const x=index===null?{}:DATA[index]||{};
  pendingPhoto=x["FOTOĞRAF"]||null;removePhotoFlag=false;setTimeout(()=>renderPhotoPreview(pendingPhoto),0);
  sv("f_plaka",x["ARAC PLAKASI"]);sv("f_marka",x["MARKASI"]);sv("f_model",x["MODEL YILI"]);sv("f_km",x["KİLOMETRE"]);sv("f_ceker",x["ÇEKER"]);
- sv("f_gorev",x["GÖREV YERİ"]);sv("f_klima",x["KLİMA DURUMU"]||"AKTİF");sv("f_motor",x["MOTOR SERİ NO"]);sv("f_sasi",x["ŞASİ SERİ NO"]);
+ sv("f_gorev",x["GÖREV YERİ"]);sv("f_uretici",x["ÜRETİCİ FİRMA"]||"");sv("f_klima",x["KLİMA DURUMU"]||"AKTİF");sv("f_motor",x["MOTOR SERİ NO"]);sv("f_sasi",x["ŞASİ SERİ NO"]);
  sv("f_ruhsat",x["RUHSAT BELGE NO"]);sv("f_kasko",x["KASKO"]);sv("f_sigbas",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"]));
  sv("f_sigbit",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]));sv("f_muybas",dateInputValue(x["MUAYENE BAŞLANGIÇ"]));sv("f_muybit",dateInputValue(x["MUAYENE BİTİŞ"]));sv("f_ekc",dateInputValue(x["EK C MUAYENE"]));
  document.getElementById("formDetail").classList.add("show");
@@ -300,10 +331,10 @@ function renderRecentServices(){
  const box=document.getElementById('recentServices');
  if(!SERVICES.length){box.innerHTML='<div class="row"><div class="row-top"><span>Henüz servis kaydı yok</span><span>🛠️</span></div><div class="kpi-note">İlk bakım kaydını eklemek için “+ Servis Kaydı” butonunu kullan.</div></div>';return;}
  const arr=[...SERVICES].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,2);
- box.innerHTML=arr.map(s=>`<div class="service-item"><div class="service-top"><span>${escapeHtml(s.plate)}</span><span class="tag">${escapeHtml(s.type)}</span></div><div class="service-meta">${fmt(s.date)} · ${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div>${s.note?`<div class="service-note"><b>Not:</b> ${escapeHtml(s.note)}</div>`:''}<div class="service-actions"><button type="button" class="secondary" onclick="openVehicleByPlate('${String(s.plate).replace(/'/g,"\\'")}')">Araç</button></div></div>`).join('');
+ box.innerHTML=arr.map(s=>`<div class="service-item"><div class="service-top"><span>${escapeHtml(s.plate)}</span><span class="tag">${escapeHtml(s.type)}</span></div><div class="service-meta">${fmt(s.date)} · ${s.status?'<span class="tag">'+escapeHtml(s.status)+'</span> · ':''}${s.company?escapeHtml(s.company)+' · ':''}${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div>${s.note?`<div class="service-note"><b>Not:</b> ${escapeHtml(s.note)}</div>`:''}<div class="service-actions"><button type="button" class="secondary" onclick="openVehicleByPlate('${String(s.plate).replace(/'/g,"\\'")}')">Araç</button></div></div>`).join('');
 }
 function saveVehicle(e){
- e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":gv("f_model"),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
+ e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":gv("f_model"),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ÜRETİCİ FİRMA":gv("f_uretici"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
  if(!removePhotoFlag&&pendingPhoto)x["FOTOĞRAF"]=pendingPhoto;else if(removePhotoFlag)x["FOTOĞRAF"]="";
  const idx=document.getElementById("editIndex").value;
  if(idx===""){if(DATA.some(v=>normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka zaten kayıtlı.");return}DATA.push(x)}else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=DATA.length){alert("Düzenlenecek araç kaydı bulunamadı.");return}const old=DATA[n];if(DATA.some((v,j)=>j!==n&&normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka başka bir araçta kayıtlı.");return}x["SIRA"]=old["SIRA"]||String(n+1);["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ","ZORUNLU TRAFİK SİGORTASI BİTİŞ","MUAYENE BAŞLANGIÇ","MUAYENE BİTİŞ","EK C MUAYENE"].forEach(k=>{if(!x[k] && old[k]) x[k]=old[k]});DATA[n]={...old,...x}}
@@ -316,7 +347,7 @@ function deleteVehicleByPlate(plate){if(Date.now()>=adminUnlockedUntil){adminPen
 function populateServiceVehicles(selected){const e=document.getElementById('s_vehicle');e.innerHTML=DATA.slice().sort((a,b)=>normalize(a['ARAC PLAKASI']).localeCompare(normalize(b['ARAC PLAKASI']))).map(x=>`<option value="${escapeHtml(x['ARAC PLAKASI'])}">${escapeHtml(x['ARAC PLAKASI'])} · ${escapeHtml(x['MARKASI']||'')}</option>`).join('');if(selected)e.value=selected;}
 function openServiceForm(plate='', editIndex=''){
  if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>openServiceForm(plate,editIndex);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}
-const form=document.getElementById('serviceForm');document.getElementById('serviceEditIndex').value=editIndex===''?'':String(editIndex);populateServiceVehicles(plate);if(editIndex!==''){const s=SERVICES[Number(editIndex)];if(!s)return;document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydını Düzenle';sv('s_date',s.date||'');sv('s_type',s.type||'Periyodik Bakım');sv('s_km',s.km||'');sv('s_cost',s.cost||'');sv('s_nextKm',s.nextKm||'');sv('s_note',s.note||'');sv('s_vehicle',s.plate||plate)}else{document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydı';sv('s_date',new Date().toISOString().slice(0,10));sv('s_type','Periyodik Bakım');sv('s_km','');sv('s_cost','');sv('s_nextKm','');sv('s_note','');}document.getElementById('serviceDetail').classList.add('show');}
+const form=document.getElementById('serviceForm');document.getElementById('serviceEditIndex').value=editIndex===''?'':String(editIndex);populateServiceVehicles(plate);if(editIndex!==''){const s=SERVICES[Number(editIndex)];if(!s)return;document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydını Düzenle';sv('s_date',s.date||'');sv('s_type',s.type||'Periyodik Bakım');sv('s_km',s.km||'');sv('s_cost',s.cost||'');sv('s_nextKm',s.nextKm||'');sv('s_company',s.company||'');sv('s_status',s.status||'Talep Aşamasında');sv('s_note',s.note||'');sv('s_vehicle',s.plate||plate)}else{document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydı';sv('s_date',new Date().toISOString().slice(0,10));sv('s_type','Periyodik Bakım');sv('s_km','');sv('s_cost','');sv('s_nextKm','');sv('s_company','');sv('s_status','Talep Aşamasında');sv('s_note','');}document.getElementById('serviceDetail').classList.add('show');}
 function closeServiceForm(){document.getElementById('serviceDetail').classList.remove('show')}
 
 // Muayene başlangıç tarihi girildiğinde bitiş tarihini otomatik olarak 1 yıl sonrasına ayarlar.
@@ -333,7 +364,7 @@ function autoSetInspectionEndDate(){
  const day=String(d.getDate()).padStart(2,"0");
  end.value=`${y}-${m}-${day}`;
 }
-function saveService(e){e.preventDefault();const plate=gv('s_vehicle');const r={plate,date:gv('s_date'),type:gv('s_type'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),note:gv('s_note')};const idx=document.getElementById('serviceEditIndex').value;if(idx==='')SERVICES.push(r);else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=SERVICES.length){alert('Düzenlenecek servis kaydı bulunamadı.');return}SERVICES[n]=r;}persist();closeServiceForm();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(plate));if(x)openModal(x)}
+function saveService(e){e.preventDefault();const plate=gv('s_vehicle');const r={plate,date:gv('s_date'),type:gv('s_type'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),company:gv('s_company'),status:gv('s_status'),note:gv('s_note')};const idx=document.getElementById('serviceEditIndex').value;if(idx==='')SERVICES.push(r);else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=SERVICES.length){alert('Düzenlenecek servis kaydı bulunamadı.');return}SERVICES[n]=r;}persist();closeServiceForm();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(plate));if(x)openModal(x)}
 function openServiceForVehicle(plate){openServiceForm(plate)}
 function editService(idx){const s=SERVICES[Number(idx)];if(!s){alert('Servis kaydı bulunamadı.');return}openServiceForm(s.plate,Number(idx))}
 function deleteService(idx){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteService(idx);document.getElementById('adminLock').classList.add('show');setTimeout(()=>document.getElementById('adminPasswordInput')?.focus(),50);return}const s=SERVICES[Number(idx)];if(!s)return;if(!confirm((s.plate||'Araç')+' servis kaydı silinsin mi?'))return;SERVICES.splice(Number(idx),1);persist();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(s.plate));if(x)openModal(x)}
@@ -346,7 +377,7 @@ function renderServicePage(){
   const from=document.getElementById('servicePageFrom')?.value||'';
   const to=document.getElementById('servicePageTo')?.value||'';
   const filtered=SERVICES.map((s,i)=>({s,i})).filter(({s})=>{
-    const text=normalize([s.plate,s.type,s.note,s.km,s.cost].join(' '));
+    const text=normalize([s.plate,s.type,s.company,s.status,s.note,s.km,s.cost].join(' '));
     if(q&&!text.includes(q))return false;
     if(type&&s.type!==type)return false;
     if(plate&&normalize(s.plate)!==normalize(plate))return false;
@@ -365,14 +396,14 @@ function renderServicePage(){
     return `<tr>
       <td><span class="plate">${escapeHtml(s.plate||'—')}</span><span class="sub">${escapeHtml(vehicle?.['GÖREV YERİ']||'')}</span></td>
       <td>${escapeHtml(fmt(s.date)||'—')}</td>
-      <td><span class="tag">${escapeHtml(s.type||'—')}</span></td>
+      <td><span class="tag">${escapeHtml(s.type||'—')}</span></td><td><span class="tag">${escapeHtml(s.status||'Talep Aşamasında')}</span></td><td>${escapeHtml(s.company||'—')}</td>
       <td>${s.km?Number(s.km).toLocaleString('tr-TR')+' km':'—'}</td>
       <td>${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':'—'}</td>
       <td>${s.nextKm?Number(s.nextKm).toLocaleString('tr-TR')+' km':'—'}</td>
       <td class="service-note-cell">${escapeHtml(s.note||'Not yok')}</td>
       <td><div style="display:flex;gap:6px;flex-wrap:wrap"><button type="button" class="secondary" onclick="editService(${i})">✏️ Düzenle</button><button type="button" class="danger-btn" onclick="deleteService(${i})">🗑️ Sil</button><button type="button" class="secondary" onclick="openModal(DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize('${String(s.plate||'').replace(/'/g,"\\'")}')))" >🚑 Araç</button></div></td>
     </tr>`;
-  }).join(''):`<tr><td colspan="8" class="service-empty">Filtrelere uyan servis kaydı bulunamadı.</td></tr>`;
+  }).join(''):`<tr><td colspan="10" class="service-empty">Filtrelere uyan servis kaydı bulunamadı.</td></tr>`;
   body.innerHTML=`
     <div class="panel" style="box-shadow:none">
       <div class="toolbar service-page-toolbar">
@@ -384,7 +415,7 @@ function renderServicePage(){
         <button type="button" onclick="openServiceForm()">+ Servis Kaydı</button>
         <button type="button" class="secondary" onclick="clearServicePageFilters()">Filtreleri Temizle</button>
       </div>
-      <div class="service-table-wrap"><table class="service-table"><thead><tr><th>Plaka</th><th>Tarih</th><th>İşlem</th><th>Km</th><th>Maliyet</th><th>Sonraki Km</th><th>Not</th><th>İşlemler</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="service-table-wrap"><table class="service-table"><thead><tr><th>Plaka</th><th>Tarih</th><th>İşlem</th><th>Durum</th><th>Firma</th><th>Km</th><th>Maliyet</th><th>Sonraki Km</th><th>Not</th><th>İşlemler</th></tr></thead><tbody>${rows}</tbody></table></div>
     </div>`;
   ['servicePageSearch','servicePagePlate','servicePageType','servicePageFrom','servicePageTo'].forEach(id=>document.getElementById(id)?.addEventListener('input',renderServicePage));
 }
@@ -396,8 +427,9 @@ function clearServicePageFilters(){
 function exportBackup(){const payload={version:2,exportedAt:new Date().toISOString(),vehicles:DATA,services:SERVICES};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='112_filo_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
 function importBackup(input){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>importBackup(input);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];persist();refreshDashboard();renderLocations();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
 
-document.addEventListener("keydown",e=>{if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
+document.addEventListener("keydown",e=>{if(document.getElementById("siteGate")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();enterSite()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
 function init(){
+ initSiteGate();
  loadSaved();
  document.getElementById("today").textContent=getToday().toLocaleDateString("tr-TR"); const loc=[...new Set(DATA.map(x=>x["GÖREV YERİ"]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
  document.getElementById("location").innerHTML='<option value="">Tüm görev yerleri</option>'+loc.map(x=>`<option>${x}</option>`).join("");
@@ -421,12 +453,12 @@ function render(){
  <td>${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}<span class="sub">${fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</span></td>
  <td>${x["EK C MUAYENE"]?((String(x["EK C MUAYENE"]).toUpperCase()==="MUAF")?'<span class="status ok">MUAF</span>':`<span class="sub">${fmt(x["EK C MUAYENE"])}</span>`):"—"}</td>
  <td>${normalize(x["KASKO"])==="evet"?'<span class="status ok">EVET</span>':'<span class="status danger">HAYIR</span>'}</td>
- <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td></tr>`).join("");
+ <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td><td>${escapeHtml(x["ÜRETİCİ FİRMA"]||"—")}</td></tr>`).join("");
 }
 function openModal(x){
  document.getElementById("mTitle").textContent=x["ARAC PLAKASI"]||"Araç";
  document.getElementById("mSub").textContent=`${x["MARKASI"]||""} · ${x["GÖREV YERİ"]||""}`;
- const fields=[["Marka",x["MARKASI"]],["Model Yılı",x["MODEL YILI"]],["Kilometre",x["KİLOMETRE"]?Number(x["KİLOMETRE"]).toLocaleString('tr-TR')+' km':"—"],["Çeker",x["ÇEKER"]],["Görev Yeri",x["GÖREV YERİ"]],["Motor Seri No",x["MOTOR SERİ NO"]],["Şasi Seri No",x["ŞASİ SERİ NO"]],["Ruhsat Belge No",x["RUHSAT BELGE NO"]],["Kasko",x["KASKO"]],["Klima",x["KLİMA DURUMU"]],["Sigorta Başlangıç",fmt(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"])],["Sigorta Bitiş",fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])],["Muayene Başlangıç",fmt(x["MUAYENE BAŞLANGIÇ"])],["Muayene Bitiş",fmt(x["MUAYENE BİTİŞ"])],["Ek C Muayene",x["EK C MUAYENE"]?.startsWith("202")?fmt(x["EK C MUAYENE"]):x["EK C MUAYENE"]]];
+ const fields=[["Marka",x["MARKASI"]],["Model Yılı",x["MODEL YILI"]],["Kilometre",x["KİLOMETRE"]?Number(x["KİLOMETRE"]).toLocaleString('tr-TR')+' km':"—"],["Çeker",x["ÇEKER"]],["Görev Yeri",x["GÖREV YERİ"]],["Motor Seri No",x["MOTOR SERİ NO"]],["Şasi Seri No",x["ŞASİ SERİ NO"]],["Ruhsat Belge No",x["RUHSAT BELGE NO"]],["Kasko",x["KASKO"]],["Üretici Firma",x["ÜRETİCİ FİRMA"]],["Klima",x["KLİMA DURUMU"]],["Sigorta Başlangıç",fmt(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"])],["Sigorta Bitiş",fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])],["Muayene Başlangıç",fmt(x["MUAYENE BAŞLANGIÇ"])],["Muayene Bitiş",fmt(x["MUAYENE BİTİŞ"])],["Ek C Muayene",x["EK C MUAYENE"]?.startsWith("202")?fmt(x["EK C MUAYENE"]):x["EK C MUAYENE"]]];
  document.getElementById("mBody").innerHTML=(x["FOTOĞRAF"]?'<img class="detail-photo" src="'+x["FOTOĞRAF"]+'" alt="Araç fotoğrafı">':"")+`<div class="notice">Muayene: ${status(x["MUAYENE BİTİŞ"])} &nbsp; Sigorta: ${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</div><div class="facts">${fields.map(([a,b])=>`<div class="fact"><b>${a}</b><span>${escapeHtml(b||"—")}</span></div>`).join("")}</div><div class="panel" style="margin-top:14px;overflow:visible"><div class="panel-head"><h2>🛠️ Bakım & Servis Geçmişi</h2><span class="spacer"><button type="button" id="addServiceForVehicleBtn">+ Kayıt Ekle</button></span></div><div style="padding:12px">${renderServiceHistory(x["ARAC PLAKASI"])}</div></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" id="detailEditBtn">✏️ Düzenle</button><button type="button" id="detailDeleteBtn" class="danger-btn">🗑️ Sil</button></div>`;
  document.getElementById("detailEditBtn").onclick=e=>{e.preventDefault();editVehicleByPlate(x["ARAC PLAKASI"])};document.getElementById("detailDeleteBtn").onclick=e=>{e.preventDefault();deleteVehicleByPlate(x["ARAC PLAKASI"])};const addServiceBtn=document.getElementById("addServiceForVehicleBtn");if(addServiceBtn){addServiceBtn.onclick=e=>{e.preventDefault();e.stopPropagation();openServiceForVehicle(x["ARAC PLAKASI"]||"");};}document.getElementById("detail").classList.add("show");
 }
@@ -496,8 +528,46 @@ function openNavView(kind){
   }
   if(kind==="reports"){
     title.textContent="📊 Raporlar";
-    const ford=DATA.filter(x=>normalize(x["MARKASI"]).includes("ford")).length, four=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*4")).length;
-    body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam Araç</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">4×4</div><div class="metric">${four}</div></div><div class="card"><div class="label">Ford</div><div class="metric">${ford}</div></div><div class="card"><div class="label">Servis Kaydı</div><div class="metric">${SERVICES.length}</div></div></div><div class="notice" style="margin-top:14px">Detaylı veri çıktısı ve veri yedekleme işlemleri <b>Ayarlar</b> sayfasından yapılabilir.</div>`;
+    const total=DATA.length;
+    const count=v=>DATA.filter(v).length;
+    const active=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
+    const kasko=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
+    const insuredRisk=DATA.filter(x=>docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])!=="ok").length;
+    const inspectionRisk=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])!=="ok").length;
+    const inspection90=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90}).length;
+    const four=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*4")).length;
+    const producers=["EMS","AC","DORSER"].map(p=>({p,n:DATA.filter(x=>normalize(x["ÜRETİCİ FİRMA"])===normalize(p)).length}));
+    const locations={};DATA.forEach(x=>{const k=x["GÖREV YERİ"]||"Belirtilmemiş";locations[k]=(locations[k]||0)+1});
+    const serviceStatuses=["Talep Aşamasında","Onarımda","Tamamlandı"].map(st=>({st,n:SERVICES.filter(x=>(x.status||"Talep Aşamasında")===st).length}));
+    const totalCost=SERVICES.reduce((a,x)=>a+(Number(x.cost)||0),0);
+    const avgCost=SERVICES.length?totalCost/SERVICES.length:0;
+    const topLoc=Object.entries(locations).sort((a,b)=>b[1]-a[1]).slice(0,8);
+    const bars=(items,max)=>items.map(([label,n])=>`<div class="progress-row"><div class="progress-meta"><span>${escapeHtml(label)}</span><b>${n}</b></div><div class="progress-track"><i style="width:${max?Math.round(n/max*100):0}%"></i></div></div>`).join("");
+    body.innerHTML=`
+      <div class="nav-stat-grid">
+        <div class="card"><div class="label">Toplam Araç</div><div class="metric">${total}</div></div>
+        <div class="card"><div class="label">Kasko</div><div class="metric">${kasko} <span class="sub">${total?Math.round(kasko/total*100):0}%</span></div></div>
+        <div class="card"><div class="label">Klima Aktif</div><div class="metric">${active} <span class="sub">${total?Math.round(active/total*100):0}%</span></div></div>
+        <div class="card"><div class="label">4×4</div><div class="metric">${four}</div></div>
+        <div class="card"><div class="label">Sigorta Riski</div><div class="metric danger">${insuredRisk}</div></div>
+        <div class="card"><div class="label">Muayene Riski</div><div class="metric danger">${inspectionRisk}</div></div>
+        <div class="card"><div class="label">90 Gün İçinde Muayene</div><div class="metric warn">${inspection90}</div></div>
+        <div class="card"><div class="label">Servis Maliyeti</div><div class="metric">${totalCost.toLocaleString('tr-TR',{minimumFractionDigits:2})} ₺</div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="panel"><div class="panel-head"><h2>🚑 Üretici Firma Dağılımı</h2></div><div class="side-list">${bars(producers.map(x=>[x.p,x.n]),Math.max(1,...producers.map(x=>x.n)))}</div></div>
+        <div class="panel"><div class="panel-head"><h2>🛠️ Servis Durumları</h2></div><div class="side-list">${bars(serviceStatuses.map(x=>[x.st,x.n]),Math.max(1,...serviceStatuses.map(x=>x.n)))}
+          <div class="notice">Ortalama servis maliyeti: <b>${avgCost.toLocaleString('tr-TR',{minimumFractionDigits:2})} ₺</b></div></div></div>
+      </div>
+      <div class="dashboard-grid">
+        <div class="panel"><div class="panel-head"><h2>📍 En Yoğun Görev Yerleri</h2></div><div class="side-list">${bars(topLoc,Math.max(1,...topLoc.map(x=>x[1])))}</div></div>
+        <div class="panel"><div class="panel-head"><h2>📋 Belge / Donanım Özeti</h2></div><div class="side-list">
+          <div class="row"><div class="row-top"><span>Sigorta uygun</span><b>${total-insuredRisk}</b></div></div>
+          <div class="row"><div class="row-top"><span>Muayene uygun</span><b>${total-inspectionRisk}</b></div></div>
+          <div class="row"><div class="row-top"><span>Kaskolu</span><b>${kasko}</b></div></div>
+          <div class="row"><div class="row-top"><span>Klima aktif</span><b>${active}</b></div></div>
+        </div></div>
+      </div>`;
   }
   if(kind==="settings"){
     title.textContent="⚙️ Ayarlar";
@@ -507,6 +577,7 @@ function openNavView(kind){
 }
 document.querySelectorAll("aside .nav").forEach(n=>n.addEventListener("click",()=>openNavView(n.dataset.nav)));
 function downloadCSV(){
+ if(Date.now()>=adminUnlockedUntil){adminPendingAction=downloadCSV;document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}
  const cols=Object.keys(DATA[0]||{}); const esc=v=>`"${String(v??"").replaceAll('"','""')}"`;
  const csv="\uFEFF"+[cols.map(esc),...DATA.map(r=>cols.map(c=>esc(r[c])))].map(r=>r.join(";")).join("\n");
  const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));a.download="2026_arac_takip_listesi.csv";a.click();
