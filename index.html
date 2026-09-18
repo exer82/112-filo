@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Araç Takip Sistemi</title>
 <style>
+
 .admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6e9ef;--primary:#1769e0;--primary2:#0f56bd;--ok:#159957;--warn:#e9a400;--danger:#dc3545;--shadow:0 8px 28px rgba(20,32,55,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
@@ -22,6 +23,9 @@ main{padding:24px;max-width:1600px;width:100%;margin:auto}.topline{display:flex;
 .grid{display:block}.panel{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.panel-head{padding:16px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:10px}.panel-head h2{font-size:15px;margin:0}.panel-head .spacer{margin-left:auto}
 .toolbar{padding:13px 18px;border-bottom:1px solid var(--line);display:flex;gap:9px;flex-wrap:wrap}.search{flex:1;min-width:220px;padding:10px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.search:focus{border-color:#76aaf0;box-shadow:0 0 0 3px #1769e018}
 select{padding:10px;border:1px solid #d9dee8;border-radius:9px;background:#fff;color:#344054}.fact input,.fact select{width:100%;padding:9px;border:1px solid #d9dee8;border-radius:8px;color:#344054;background:#fff}
+/* Sadece servis bakım kaydındaki üç ilk seçenek için placeholder rengi */
+#s_faultType:has(> option:first-child:checked),#s_company:has(> option:first-child:checked),#s_status:has(> option:first-child:checked){color:#98a2b3}
+#s_faultType option:first-child,#s_company option:first-child,#s_status option:first-child{color:#98a2b3}
 .table-wrap{overflow:auto;max-height:calc(100vh - 360px);min-height:620px}.vehicle-page .cards,.vehicle-page .alert-panel,.vehicle-page .dashboard-grid,.vehicle-page .stat-strip,.vehicle-page .topline{display:none}.vehicle-page main{padding-top:18px}.vehicle-page .table-wrap{max-height:none;min-height:0;overflow-x:auto;overflow-y:visible}.vehicle-page .panel{width:100%}.vehicle-page footer{display:none}.service-page main{padding-top:18px}.service-page .topline,.service-page .cards,.service-page .stat-strip,.service-page .dashboard-grid,.service-page .alert-panel,.service-page .grid,.service-page footer{display:none}.service-page .nav-view{display:block!important;margin-top:0}.service-page .nav-view .panel{box-shadow:none}.service-page .nav-view .panel-head{border:0;padding:0 0 16px}.service-page .nav-view .modal-body{padding:0}.menu-page main{padding-top:18px}.menu-page .topline,.menu-page .cards,.menu-page .stat-strip,.menu-page .dashboard-grid,.menu-page .alert-panel,.menu-page .grid,.menu-page footer{display:none}.menu-page .nav-view{display:block!important;margin-top:0}.menu-page .nav-view .panel{box-shadow:none}.menu-page .nav-view .panel-head{border:0;padding:0 0 16px}.vehicle-page .nav-view{display:none!important}.vehicle-page .topline,.vehicle-page .cards,.vehicle-page .alert-panel{display:none}.vehicle-page .grid{display:block}table{width:100%;border-collapse:collapse;min-width:950px}th,td{padding:11px 13px;border-bottom:1px solid #edf0f4;text-align:left;white-space:nowrap}th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0;z-index:2}tr:hover td{background:#f8fbff}.plate{font-weight:800;color:#175dcc}.sub{display:block;color:#7a8494;font-size:11px;margin-top:2px}
 .status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800}.status.ok{background:#e9f8f0;color:#13834d}.status.warn{background:#fff6dc;color:#9b6a00}.status.danger{background:#fdebed;color:#b42318}.status.critical{background:#b42318;color:#fff;box-shadow:0 0 0 2px #b4231820}.alert-panel{margin-bottom:18px;border:1px solid #f1b7b2;background:#fff7f6;border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.alert-head{padding:14px 18px;border-bottom:1px solid #f3d0cc;display:flex;align-items:center;gap:10px}.alert-head b{color:#9f1c13}.alert-count{margin-left:auto;font-weight:800;color:#b42318}.alert-list{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px}.alert-item{border:1px solid #f0c2bd;background:#fff;border-radius:10px;padding:10px 12px;min-width:210px;cursor:pointer}.alert-item:hover{background:#fff2f0}.alert-item b{display:block;color:#b42318}.alert-item span{font-size:11px;color:#667085}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .side-list{padding:8px 18px 16px}.row{padding:12px 0;border-bottom:1px solid #eef1f5}.row:last-child{border-bottom:0}.row-top{display:flex;justify-content:space-between;gap:10px;font-weight:800}.bar{height:7px;border-radius:99px;background:#edf1f6;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:#1769e0;border-radius:99px}
@@ -29,11 +33,76 @@ select{padding:10px;border:1px solid #d9dee8;border-radius:9px;background:#fff;c
 footer{color:#98a2b3;font-size:11px;padding:18px 0}
 @media(max-width:1000px){.layout{grid-template-columns:1fr}aside{display:none}.cards{grid-template-columns:repeat(2,1fr)}.grid{grid-template-columns:1fr}}@media(max-width:600px){main{padding:14px}.cards{grid-template-columns:1fr 1fr}.metric{font-size:23px}.facts{grid-template-columns:1fr 1fr}.header-right .pill{display:none}}
 .nav-view .modal-body{padding:18px}.nav-stat-grid{display:grid;grid-template-columns:repeat(4,minmax(160px,1fr));gap:12px}.nav-view .nav-table-wrap{overflow:auto}.nav-view table{min-width:760px}.nav-view .mini-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}.nav-view .mini-item{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafbfc}.nav-view .mini-item b{display:block;margin-bottom:5px}.nav-view .action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}@media(max-width:900px){.nav-stat-grid{grid-template-columns:repeat(2,1fr)}}
-.vehicle-photo{width:100%;height:190px;object-fit:cover;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;display:block}.photo-placeholder{height:190px;border:1px dashed #b8c0cc;border-radius:14px;background:#f8fafc;display:flex;align-items:center;justify-content:center;color:#667085;font-weight:700}.photo-actions{display:flex;gap:8px;margin-top:8px;align-items:center}.photo-actions small{color:#667085}.detail-photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;margin-bottom:14px}
+.vehicle-photo{width:100%;height:190px;object-fit:cover;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;display:block}.detail-photo{width:100%;max-height:300px;object-fit:contain;border-radius:14px;border:1px solid var(--border);background:#f2f4f7;margin-bottom:14px}
 /* v2 geliştirmeleri */
 .stat-strip{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:18px}.mini-stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 15px}.mini-stat .mini-label{color:var(--muted);font-size:11px;font-weight:700}.mini-stat strong{display:block;font-size:19px;margin-top:4px}.dashboard-grid{display:grid;grid-template-columns:1.2fr .8fr;gap:18px;margin-bottom:18px}.progress-row{padding:10px 0;border-bottom:1px solid #eef1f5}.progress-row:last-child{border-bottom:0}.progress-meta{display:flex;justify-content:space-between;font-size:12px;font-weight:700}.progress-track{height:8px;border-radius:99px;background:#edf1f6;margin-top:7px;overflow:hidden}.progress-track i{display:block;height:100%;border-radius:99px;background:#1769e0}.service-list{display:grid;gap:9px}.service-item{border:1px solid var(--line);border-radius:10px;padding:11px 12px;background:#fbfcfe}.service-item .service-top{display:flex;justify-content:space-between;gap:10px;font-weight:800}.service-item .service-meta{font-size:11px;color:var(--muted);margin-top:4px}.service-actions{display:flex;gap:7px;margin-top:8px;justify-content:flex-end}.tag{display:inline-flex;align-items:center;padding:4px 7px;border-radius:999px;font-size:10px;font-weight:800;background:#eef5ff;color:#1769e0}.data-tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.data-tools button{font-size:12px}.danger-btn{background:#dc3545}.success-btn{background:#159957}.kpi-note{font-size:11px;color:var(--muted);margin-top:5px}@media(max-width:1000px){.stat-strip{grid-template-columns:1fr 1fr}.dashboard-grid{grid-template-columns:1fr}}@media(max-width:600px){.stat-strip{grid-template-columns:1fr 1fr}.dashboard-grid{gap:12px}}
 #serviceDetail{z-index:100}#formDetail{z-index:90}#detail{z-index:50}.service-note{margin-top:7px;font-size:12px;color:#344054;background:#f6f8fb;border-radius:8px;padding:7px 9px}
-.service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}<style>@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}</style></style>
+.service-note-input{width:100%;box-sizing:border-box;display:block;height:90px;min-height:90px;resize:vertical}
+.service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}
+.producer-status{display:inline-flex;align-items:center;justify-content:center;min-width:64px;padding:5px 10px;border-radius:999px;background:#eaf7ef;color:#18864b;font-weight:800;text-align:center;}
+
+/* v18 responsive mobile/tablet */
+.mobile-menu-toggle{display:none;background:#eef2f7;color:#344054;width:44px;height:44px;padding:0;border-radius:10px;font-size:22px;align-items:center;justify-content:center;flex:0 0 44px}
+@media(max-width:1000px){
+  body{overflow-x:hidden}
+  header{height:68px;padding:0 12px;gap:10px}
+  .layout{display:block;min-height:calc(100vh - 68px)}
+  aside{position:fixed;left:0;top:0;width:min(290px,86vw);height:100dvh;z-index:180;padding:76px 13px 20px;transform:translateX(-105%);transition:transform .22s ease;box-shadow:18px 0 45px rgba(0,0,0,.18);overflow-y:auto}
+  body.menu-open aside{transform:translateX(0)}
+  body.menu-open::after{content:"";position:fixed;inset:0;background:rgba(11,18,40,.38);z-index:170}
+  .mobile-menu-toggle{display:flex}
+  main{padding:16px}
+  .topline h1{font-size:22px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .stat-strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dashboard-grid{grid-template-columns:1fr}
+  .nav-stat-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .toolbar,.service-page-toolbar{display:grid;grid-template-columns:1fr;gap:8px}
+  .toolbar input,.toolbar select,.service-page-toolbar input,.service-page-toolbar select{width:100%;min-width:0}
+  .modal{width:min(720px,calc(100vw - 24px));max-height:calc(100dvh - 24px);border-radius:14px}
+  .modal-body{padding:16px}
+  .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .detail{padding:12px}
+  .table-wrap,.service-table-wrap,.nav-view .nav-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .table-wrap table{min-width:1050px}
+  .service-table{min-width:1000px}
+  button,.nav{min-height:44px}
+  input,select,textarea{font-size:16px}
+}
+@media(max-width:600px){
+  header{padding:0 10px}
+  .logo{width:46px;height:46px}
+  .brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:15px;line-height:1.15;min-width:0}
+  .brand small{font-size:9px;line-height:1.15}
+  .header-right{gap:5px}
+  .header-right button{display:none}
+  .header-right .pill{display:none}
+  main{padding:12px}
+  .cards,.stat-strip,.service-kpi-grid,.nav-stat-grid{grid-template-columns:1fr}
+  .card,.mini-stat{padding:12px}
+  .metric{font-size:22px}
+  .panel-head{gap:8px;align-items:flex-start}
+  .panel-head h2{font-size:16px}
+  .facts{grid-template-columns:1fr}
+  .fact{padding:11px}
+  .modal-head{padding:14px 15px;position:sticky;top:0;background:#fff;z-index:2}
+  .modal-body{padding:14px}
+  .detail{padding:8px}
+  .modal{width:100%;max-height:calc(100dvh - 16px);border-radius:12px}
+  .modal form>div:last-child{display:grid!important;grid-template-columns:1fr 1fr;gap:8px!important}
+  .modal form>div:last-child button{width:100%}
+  .service-page-toolbar .search{min-width:0}
+  .nav-view .mini-list{grid-template-columns:1fr}
+  .alert-list{display:grid;grid-template-columns:1fr;padding:10px 12px}
+  .alert-item{min-width:0}
+  footer{padding-bottom:28px}
+}
+@media(max-width:380px){
+  .brand{font-size:14px}
+  .brand small{display:none}
+  .mobile-menu-toggle{width:42px;height:42px;flex-basis:42px}
+}
+</style>
 </head>
 <body class="locked-site">
 <div class="admin-lock show" id="siteGate">
@@ -47,8 +116,9 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
   </div>
 </div>
 <header>
+  <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü aç" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
   <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
-  <div class="brand">Araç Takip Sistemi <small>İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="brand">Araç Takip Sistemi<small>İl Ambulans Servisi Başhekimliği</small></div>
   <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
 </header>
 <div class="layout">
@@ -57,9 +127,6 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
   <div class="nav" data-nav="vehicles"><span class="ico">🚑</span> Araçlar</div>
   <div class="nav" data-nav="services"><span class="ico">🛠️</span> Servis Kayıtları</div>
   <div class="nav" data-nav="locations"><span class="ico">📍</span> Görev Yerleri</div>
-  <div class="nav" data-nav="insurance"><span class="ico">🛡️</span> Sigorta & Kasko</div>
-  <div class="nav" data-nav="inspection"><span class="ico">🔧</span> Muayene</div>
-  <div class="nav" data-nav="ac"><span class="ico">❄️</span> Klima Durumu</div>
   <div class="nav-title">Yönetim</div>
   <div class="nav" data-nav="reports"><span class="ico">📊</span> Raporlar</div>
   <div class="nav" data-nav="settings"><span class="ico">⚙️</span> Ayarlar</div>
@@ -110,7 +177,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="detail" id="formDetail"><div class="modal">
 <div class="modal-head"><div><b id="formTitle">Yeni Araç Ekle</b><div class="sub">Araç bilgilerini girin ve kaydedin</div></div><button class="x" onclick="closeVehicleForm()">Kapat</button></div>
 <div class="modal-body"><form id="vehicleForm" onsubmit="saveVehicle(event)">
-<input type="hidden" id="editIndex"><div class="photo-box"><label>Araç Fotoğrafı</label><input id="fPhoto" type="file" accept="image/*" onchange="previewPhoto(this)"><div id="photoPreview" style="margin-top:8px"></div><div class="photo-actions"><button type="button" class="secondary" id="removePhotoBtn" onclick="removePhoto()" style="display:none">🗑️ Fotoğrafı Kaldır</button><small>JPG, PNG veya WEBP</small></div></div>
+<input type="hidden" id="editIndex">
 <div class="facts">
 <div class="fact"><b>Plaka *</b><input id="f_plaka" required></div>
 <div class="fact"><b>Marka</b><input id="f_marka"></div>
@@ -136,13 +203,20 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="detail" id="serviceDetail"><div class="modal"><div class="modal-head"><div><b id="serviceFormTitle">Servis / Bakım Kaydı</b><div class="sub">Araç bakım ve servis işlemini kaydedin</div></div><button class="x" onclick="closeServiceForm()">Kapat</button></div><div class="modal-body"><form id="serviceForm" onsubmit="saveService(event)"><input type="hidden" id="serviceEditIndex"><div class="facts">
 <div class="fact"><b>Araç Plakası *</b><select id="s_vehicle" required></select></div>
 <div class="fact"><b>Tarih *</b><input type="date" id="s_date" required></div>
-<div class="fact"><b>İşlem Türü *</b><select id="s_type"><option>Periyodik Bakım</option><option>Yağ / Filtre</option><option>Lastik</option><option>Fren</option><option>Klima</option><option>Arıza</option><option>Diğer</option></select></div>
-<div class="fact"><b>Kilometre</b><input type="number" id="s_km" min="0"></div>
+<div class="fact"><b>Mevcut Kilometre</b><input type="number" id="s_km" min="0"></div>
+<div class="fact"><b>İşlem Türü *</b><select id="s_type" onchange="toggleFaultType()"><option>Periyodik Bakım</option><option>Hasar / Arıza</option><option>Lastik</option><option>Klima / Vebasto</option><option>Diğer</option></select></div>
+<div class="fact" id="faultTypeField" style="display:none"><b>Arıza Türü</b><select id="s_faultType" onchange="toggleMechanicalNote()"><option value="">Arıza Türü Seçiniz</option><option>Mekanik</option><option>Karoser Hasarı</option><option>Motor Arıza</option></select></div>
+<div class="fact"><b>Sonraki Km Bakımı </b><input type="number" id="s_nextKm" min="0"></div>
+<div class="fact"><b>Bakım / Onarım Firması</b><select id="s_company">
+<option value="">Firma seçiniz</option>
+<option>Altaş Ford Yetkili Servisi</option>
+<option>Aldemir Oto</option>
+<option>Çağlayan Oto</option>
+<option>Güçlü Oto</option>
+</select></div>
+<div class="fact"><b>Bakım / Onarım Durumu</b><select id="s_status"><option value="">Talep aşamasında</option><option>Onarım Aşamasında</option><option>Parça / Tedarik Bekleniyor</option><option>Tamamlandı</option></select></div>
 <div class="fact"><b>Maliyet (₺)</b><input type="number" id="s_cost" min="0" step="0.01"></div>
-<div class="fact"><b>Sonraki Bakım Km</b><input type="number" id="s_nextKm" min="0"></div>
-<div class="fact"><b>Bakım / Onarım Firması</b><input id="s_company" placeholder="Firma adı"></div>
-<div class="fact"><b>Bakım Durumu</b><select id="s_status"><option>Talep Aşamasında</option><option>Onarımda</option><option>Tamamlandı</option></select></div>
-</div><div class="fact" style="margin-top:10px"><b>Not</b><input id="s_note" placeholder="Yapılan işlem / parça / açıklama"></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" onclick="closeServiceForm()">İptal</button><button type="submit" class="success-btn">💾 Kaydet</button></div></form></div></div></div>
+</div><div class="fact" style="margin-top:10px"><b>Not</b><textarea id="s_note" class="service-note-input" rows="3" placeholder="Yapılan işlem / parça / açıklama"></textarea></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" onclick="closeServiceForm()">İptal</button><button type="submit" class="success-btn">💾 Kaydet</button></div></form></div></div></div>
 <div class="detail" id="detail"><div class="modal"><div class="modal-head"><div><b id="mTitle"></b><div class="sub" id="mSub"></div></div><button class="x" onclick="closeModal()">Kapat</button></div><div class="modal-body" id="mBody"></div></div></div>
 
 <script>
@@ -151,6 +225,8 @@ const getToday=()=>{const d=new Date();d.setHours(0,0,0,0);return d;};
 const fmt=d=>d?new Date(d).toLocaleDateString("tr-TR"): "—";
 const days=(d)=>d?Math.ceil((new Date(d)-getToday())/86400000):99999;
 function docStatus(date){
+  const raw=String(date??"").trim();
+  if(!raw) return "danger";
   let x=days(date);
   if(x<0) return "danger";
   if(x<=30) return "critical";
@@ -167,6 +243,19 @@ function normalize(x){return (x??"").toString().toLocaleLowerCase("tr-TR")}
 const STORAGE_KEY="112_arac_takip_data_v2";
 const SERVICE_KEY="112_arac_servis_v1";
 let SERVICES=[];
+function normalizeServiceStatus(value){
+  const v=String(value??"").trim();
+  if(!v || /^talep\s*a[şs]amas[ıi]nda$/i.test(v)) return "Talep aşamasında";
+  if(/^yeni\s+talep\s*\/\s*kayıt\s*açıldı$/i.test(v)) return "Talep aşamasında";
+  if(/^onarım\s+aşamasında$/i.test(v)) return "Onarım Aşamasında";
+  if(/^parça\s*\/\s*tedarik\s+bekleniyor$/i.test(v)) return "Parça / Tedarik Bekleniyor";
+  if(/^tamamlandı$/i.test(v)) return "Tamamlandı";
+  return v;
+}
+function normalizeAllServiceStatuses(){
+  SERVICES=Array.isArray(SERVICES)?SERVICES.map(s=>({...s,status:normalizeServiceStatus(s?.status)})):[];
+}
+function normalizeModelYears(){DATA.forEach(v=>{if(v && v["MODEL YILI"]!=null){const raw=String(v["MODEL YILI"]).trim();if(/^\d+(?:\.0+)$/.test(raw))v["MODEL YILI"]=raw.replace(/\.0+$/,"" );}})}
 async function loadSaved(){
   // Önce mevcut tarayıcı kayıtlarını yükle: böylece mevcut cihazdaki veriler kaybolmaz.
   try{const raw=localStorage.getItem(STORAGE_KEY);if(raw){const p=JSON.parse(raw);if(Array.isArray(p))DATA.splice(0,DATA.length,...p)}}catch(e){}
@@ -185,18 +274,23 @@ async function loadSaved(){
     if(Array.isArray(p.services)){
       SERVICES=p.services;
     }
+    normalizeAllServiceStatuses();
     localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
-    localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    normalizeAllServiceStatuses();localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    normalizeModelYears();
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
     window.serverDataReady=true;
   }catch(e){
     console.warn("Ortak veritabanına bağlanılamadı; yerel kayıtlarla devam ediliyor.",e);
+    normalizeModelYears();
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
     window.serverDataReady=false;
   }
 }
 function persist(){
   try{
     localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
-    localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    normalizeAllServiceStatuses();localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
     localStorage.setItem("112_filo_last_save",new Date().toISOString());
     // Sunucu hazırsa değişikliği ortak PostgreSQL veritabanına da gönder.
     saveToServer().catch(err=>console.warn("Sunucu kaydı başarısız:",err));
@@ -217,27 +311,15 @@ async function saveToServer(){
   window.serverDataReady=true;
   return r.json();
 }
-// Otomatik kayıt: yapılan değişiklikler sayfa açıkken de düzenli olarak güvenli biçimde saklanır.
-let autoSaveTimer=null;
-function scheduleAutoSave(){
-  clearTimeout(autoSaveTimer);
-  autoSaveTimer=setTimeout(()=>persist(),300);
-}
-document.addEventListener("input",e=>{
-  if(e.target && e.target.closest("#vehicleForm,#serviceForm")) scheduleAutoSave();
-});
-document.addEventListener("change",e=>{
-  if(e.target && e.target.closest("#vehicleForm,#serviceForm")) scheduleAutoSave();
-});
-window.addEventListener("beforeunload",()=>{try{persist()}catch(e){}});
+// Form alanları yazılırken veri kaydı yapılmaz. Kaydet butonu tek ve kontrollü kayıt noktasıdır.
 function gv(id){return document.getElementById(id).value.trim()}
 function sv(id,v){const e=document.getElementById(id);if(e)e.value=v||""}
 function dateInputValue(v){const s=String(v??"");return /^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(0,10):s}
-let pendingPhoto=null,removePhotoFlag=false;
+
 function escapeHtml(v){return String(v??"").replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
-function renderPhotoPreview(src){const b=document.getElementById("photoPreview"),r=document.getElementById("removePhotoBtn");if(src){b.innerHTML='<img class="vehicle-photo" src="'+src+'" alt="Araç fotoğrafı">';r.style.display="inline-flex"}else{b.innerHTML='<div class="photo-placeholder">📷 Araç fotoğrafı eklenmedi</div>';r.style.display="none"}}
-function previewPhoto(input){const f=input.files&&input.files[0];if(!f)return;if(!f.type.startsWith("image/")){alert("Lütfen bir görsel dosyası seçin.");input.value="";return}const rd=new FileReader();rd.onload=e=>{pendingPhoto=e.target.result;removePhotoFlag=false;renderPhotoPreview(pendingPhoto)};rd.readAsDataURL(f)}
-function removePhoto(){pendingPhoto=null;removePhotoFlag=true;document.getElementById("fPhoto").value="";renderPhotoPreview(null)}
+
+
+
 const ADMIN_PASSWORD="112admin";
 // Yönetici oturumu sekme açık kaldığı sürece korunur; sekme/pencere kapanınca sessionStorage temizlenir.
 let adminUnlockedUntil=(sessionStorage.getItem("112_admin_unlocked")==="1" ? Infinity : 0);
@@ -246,12 +328,16 @@ function enterSite(){
  const i=document.getElementById("sitePasswordInput");
  if(i&&i.value===ADMIN_PASSWORD){
    sessionStorage.setItem("112_site_unlocked","1");
+   adminUnlockedUntil=Infinity;
+   sessionStorage.setItem("112_admin_unlocked","1");
    document.body.classList.remove("locked-site");
    document.getElementById("siteGate")?.classList.remove("show");
  }else{ alert("Yönetici parolası hatalı."); i?.select(); }
 }
 function initSiteGate(){
  if(sessionStorage.getItem("112_site_unlocked")==="1"){
+   adminUnlockedUntil=Infinity;
+   sessionStorage.setItem("112_admin_unlocked","1");
    document.body.classList.remove("locked-site");
    document.getElementById("siteGate")?.classList.remove("show");
  }else{
@@ -261,14 +347,8 @@ function initSiteGate(){
  }
 }
 function requireAdmin(action){
- if(Date.now()<adminUnlockedUntil){ action(); return true; }
- adminPendingAction=action;
- const m=document.getElementById("adminLock");
- const i=document.getElementById("adminPasswordInput");
- if(i)i.value="";
- if(m)m.classList.add("show");
- setTimeout(()=>i&&i.focus(),50);
- return false;
+ action();
+ return true;
 }
 function confirmAdminPassword(){
  const i=document.getElementById("adminPasswordInput");
@@ -281,12 +361,11 @@ function confirmAdminPassword(){
 }
 function closeAdminLock(){document.getElementById("adminLock")?.classList.remove("show");adminPendingAction=null;}
 function openVehicleForm(index=null){
- if(Date.now()>=adminUnlockedUntil){ adminPendingAction=()=>openVehicleForm(index); document.getElementById("adminLock").classList.add("show"); setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50); return; }
  document.getElementById("formTitle").textContent=index===null?"Yeni Araç Ekle":"Araç Düzenle";
  document.getElementById("editIndex").value=index===null?"":index;
  const x=index===null?{}:DATA[index]||{};
- pendingPhoto=x["FOTOĞRAF"]||null;removePhotoFlag=false;setTimeout(()=>renderPhotoPreview(pendingPhoto),0);
- sv("f_plaka",x["ARAC PLAKASI"]);sv("f_marka",x["MARKASI"]);sv("f_model",x["MODEL YILI"]);sv("f_km",x["KİLOMETRE"]);sv("f_ceker",x["ÇEKER"]);
+
+ sv("f_plaka",x["ARAC PLAKASI"]);sv("f_marka",x["MARKASI"]);sv("f_model",String(x["MODEL YILI"]??"").replace(/\.0+$/,""));sv("f_km",x["KİLOMETRE"]);sv("f_ceker",x["ÇEKER"]);
  sv("f_gorev",x["GÖREV YERİ"]);sv("f_uretici",x["ÜRETİCİ FİRMA"]||"");sv("f_klima",x["KLİMA DURUMU"]||"AKTİF");sv("f_motor",x["MOTOR SERİ NO"]);sv("f_sasi",x["ŞASİ SERİ NO"]);
  sv("f_ruhsat",x["RUHSAT BELGE NO"]);sv("f_kasko",x["KASKO"]);sv("f_sigbas",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"]));
  sv("f_sigbit",dateInputValue(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]));sv("f_muybas",dateInputValue(x["MUAYENE BAŞLANGIÇ"]));sv("f_muybit",dateInputValue(x["MUAYENE BİTİŞ"]));sv("f_ekc",dateInputValue(x["EK C MUAYENE"]));
@@ -303,8 +382,8 @@ function refreshDashboard(){
  const total=DATA.length;
  document.getElementById("total").textContent=total;
  document.getElementById("activeAc").textContent=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
- const inspectionRisk=DATA.filter(x=>{let d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90}).length;
- const insuranceRisk=DATA.filter(x=>{let d=days(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]);return d>=0&&d<=90}).length;
+ const inspectionRisk=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])!=="ok").length;
+ const insuranceRisk=DATA.filter(x=>docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])!=="ok").length;
  document.getElementById("inspection").textContent=inspectionRisk;document.getElementById("insurance").textContent=insuranceRisk;
  document.getElementById("criticalDocs").textContent=getAlerts().length;
  document.getElementById("insuredCount").textContent=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
@@ -333,21 +412,48 @@ function renderRecentServices(){
  const arr=[...SERVICES].sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,2);
  box.innerHTML=arr.map(s=>`<div class="service-item"><div class="service-top"><span>${escapeHtml(s.plate)}</span><span class="tag">${escapeHtml(s.type)}</span></div><div class="service-meta">${fmt(s.date)} · ${s.status?'<span class="tag">'+escapeHtml(s.status)+'</span> · ':''}${s.company?escapeHtml(s.company)+' · ':''}${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div>${s.note?`<div class="service-note"><b>Not:</b> ${escapeHtml(s.note)}</div>`:''}<div class="service-actions"><button type="button" class="secondary" onclick="openVehicleByPlate('${String(s.plate).replace(/'/g,"\\'")}')">Araç</button></div></div>`).join('');
 }
-function saveVehicle(e){
- e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":gv("f_model"),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ÜRETİCİ FİRMA":gv("f_uretici"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
- if(!removePhotoFlag&&pendingPhoto)x["FOTOĞRAF"]=pendingPhoto;else if(removePhotoFlag)x["FOTOĞRAF"]="";
+async function persistAndReload(){
+  // Kaydet butonu: önce tarayıcıya kesin olarak yaz, ardından sunucuya gönder ve
+  // sunucu cevap vermese bile sayfayı yenile. Böylece Kaydet sonrası arayüz eski
+  // durumda takılı kalmaz ve yerel kayıt kaybolmaz.
+  try{
+    normalizeAllServiceStatuses();
+    normalizeModelYears();
+    localStorage.setItem(STORAGE_KEY,JSON.stringify(DATA));
+    localStorage.setItem(SERVICE_KEY,JSON.stringify(SERVICES));
+    localStorage.setItem("112_filo_last_save",new Date().toISOString());
+
+    try{
+      await Promise.race([
+        saveToServer(),
+        new Promise((_,reject)=>setTimeout(()=>reject(new Error("Sunucu zaman aşımı")),2000))
+      ]);
+    }catch(err){
+      console.warn("Sunucu kaydı tamamlanamadı; yerel kayıt korunuyor:",err);
+    }
+
+    window.location.reload();
+  }catch(e){
+    console.error("Kayıt/yenileme hatası:",e);
+    alert("Değişiklikler kaydedilemedi. Tarayıcı depolama alanını kontrol edin.");
+  }
+}
+
+async function saveVehicle(e){
+ e.preventDefault();const x={"ARAC PLAKASI":gv("f_plaka"),"MARKASI":gv("f_marka"),"MODEL YILI":String(gv("f_model")).replace(/\.0+$/,"" ),"KİLOMETRE":gv("f_km"),"ÇEKER":gv("f_ceker"),"GÖREV YERİ":gv("f_gorev"),"KLİMA DURUMU":gv("f_klima"),"MOTOR SERİ NO":gv("f_motor"),"ŞASİ SERİ NO":gv("f_sasi"),"RUHSAT BELGE NO":gv("f_ruhsat"),"KASKO":gv("f_kasko"),"ÜRETİCİ FİRMA":gv("f_uretici"),"ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ":gv("f_sigbas"),"ZORUNLU TRAFİK SİGORTASI BİTİŞ":gv("f_sigbit"),"MUAYENE BAŞLANGIÇ":gv("f_muybas"),"MUAYENE BİTİŞ":gv("f_muybit"),"EK C MUAYENE":gv("f_ekc")};
+
  const idx=document.getElementById("editIndex").value;
  if(idx===""){if(DATA.some(v=>normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka zaten kayıtlı.");return}DATA.push(x)}else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=DATA.length){alert("Düzenlenecek araç kaydı bulunamadı.");return}const old=DATA[n];if(DATA.some((v,j)=>j!==n&&normalize(v["ARAC PLAKASI"])===normalize(x["ARAC PLAKASI"]))){alert("Bu plaka başka bir araçta kayıtlı.");return}x["SIRA"]=old["SIRA"]||String(n+1);["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ","ZORUNLU TRAFİK SİGORTASI BİTİŞ","MUAYENE BAŞLANGIÇ","MUAYENE BİTİŞ","EK C MUAYENE"].forEach(k=>{if(!x[k] && old[k]) x[k]=old[k]});DATA[n]={...old,...x}}
- persist();closeVehicleForm();refreshDashboard();renderLocations();render();
+ await persistAndReload();
 }
 function editVehicleByPlate(plate){const i=DATA.findIndex(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(i<0){alert("Araç kaydı bulunamadı.");return}closeModal();openVehicleForm(i)}
 function openVehicleByPlate(plate){closeModal();openModalByPlate(plate)}
 function openModalByPlate(plate){const x=DATA.find(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(x)openModal(x);else alert('Araç bulunamadı.');}
-function deleteVehicleByPlate(plate){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteVehicleByPlate(plate);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return}const i=DATA.findIndex(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(i<0){alert("Araç kaydı bulunamadı.");return}const arac=DATA[i]["ARAC PLAKASI"]||plate;if(!confirm(arac+" plakalı aracı silmek istediğinize emin misiniz?"))return;DATA.splice(i,1);SERVICES=SERVICES.filter(s=>normalize(s.plate)!==normalize(plate));persist();closeModal();refreshDashboard();renderLocations();render()}
+function deleteVehicleByPlate(plate){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteVehicleByPlate(plate);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return}const i=DATA.findIndex(v=>normalize(v["ARAC PLAKASI"])===normalize(plate));if(i<0){alert("Araç kaydı bulunamadı.");return}const arac=DATA[i]["ARAC PLAKASI"]||plate;if(!confirm(arac+" plakalı aracı silmek istediğinize emin misiniz?"))return;DATA.splice(i,1);SERVICES=SERVICES.filter(s=>normalize(s.plate)!==normalize(plate));persist();refreshLocationFilter();closeModal();refreshDashboard();render()}
 function populateServiceVehicles(selected){const e=document.getElementById('s_vehicle');e.innerHTML=DATA.slice().sort((a,b)=>normalize(a['ARAC PLAKASI']).localeCompare(normalize(b['ARAC PLAKASI']))).map(x=>`<option value="${escapeHtml(x['ARAC PLAKASI'])}">${escapeHtml(x['ARAC PLAKASI'])} · ${escapeHtml(x['MARKASI']||'')}</option>`).join('');if(selected)e.value=selected;}
 function openServiceForm(plate='', editIndex=''){
  if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>openServiceForm(plate,editIndex);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}
-const form=document.getElementById('serviceForm');document.getElementById('serviceEditIndex').value=editIndex===''?'':String(editIndex);populateServiceVehicles(plate);if(editIndex!==''){const s=SERVICES[Number(editIndex)];if(!s)return;document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydını Düzenle';sv('s_date',s.date||'');sv('s_type',s.type||'Periyodik Bakım');sv('s_km',s.km||'');sv('s_cost',s.cost||'');sv('s_nextKm',s.nextKm||'');sv('s_company',s.company||'');sv('s_status',s.status||'Talep Aşamasında');sv('s_note',s.note||'');sv('s_vehicle',s.plate||plate)}else{document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydı';sv('s_date',new Date().toISOString().slice(0,10));sv('s_type','Periyodik Bakım');sv('s_km','');sv('s_cost','');sv('s_nextKm','');sv('s_company','');sv('s_status','Talep Aşamasında');sv('s_note','');}document.getElementById('serviceDetail').classList.add('show');}
+const form=document.getElementById('serviceForm');document.getElementById('serviceEditIndex').value=editIndex===''?'':String(editIndex);populateServiceVehicles(plate);if(editIndex!==''){const s=SERVICES[Number(editIndex)];if(!s)return;document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydını Düzenle';sv('s_date',s.date||'');sv('s_type',s.type||'Periyodik Bakım');sv('s_km',s.km||'');sv('s_cost',s.cost||'');sv('s_nextKm',s.nextKm||'');sv('s_company',s.company||'');sv('s_status',normalizeServiceStatus(s.status));sv('s_faultType',s.faultType||'');toggleFaultType();toggleMechanicalNote();sv('s_note',s.note||'');sv('s_vehicle',s.plate||plate)}else{document.getElementById('serviceFormTitle').textContent='Servis / Bakım Kaydı';sv('s_date',new Date().toISOString().slice(0,10));sv('s_type','Periyodik Bakım');sv('s_km','');sv('s_cost','');sv('s_nextKm','');sv('s_company','');sv('s_status','Talep aşamasında');sv('s_faultType','');sv('s_note','');toggleFaultType();toggleMechanicalNote();}document.getElementById('serviceDetail').classList.add('show');}
 function closeServiceForm(){document.getElementById('serviceDetail').classList.remove('show')}
 
 // Muayene başlangıç tarihi girildiğinde bitiş tarihini otomatik olarak 1 yıl sonrasına ayarlar.
@@ -364,10 +470,59 @@ function autoSetInspectionEndDate(){
  const day=String(d.getDate()).padStart(2,"0");
  end.value=`${y}-${m}-${day}`;
 }
-function saveService(e){e.preventDefault();const plate=gv('s_vehicle');const r={plate,date:gv('s_date'),type:gv('s_type'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),company:gv('s_company'),status:gv('s_status'),note:gv('s_note')};const idx=document.getElementById('serviceEditIndex').value;if(idx==='')SERVICES.push(r);else{const n=Number(idx);if(!Number.isInteger(n)||n<0||n>=SERVICES.length){alert('Düzenlenecek servis kaydı bulunamadı.');return}SERVICES[n]=r;}persist();closeServiceForm();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(plate));if(x)openModal(x)}
+// Sigorta başlangıç tarihi girildiğinde bitiş tarihini otomatik olarak 1 yıl sonrasına ayarlar.
+function autoSetInsuranceEndDate(){
+ const start=document.getElementById("f_sigbas");
+ const end=document.getElementById("f_sigbit");
+ if(!start||!end)return;
+ if(!start.value){end.value="";return;}
+ const d=new Date(start.value+"T00:00:00");
+ if(Number.isNaN(d.getTime()))return;
+ d.setFullYear(d.getFullYear()+1);
+ const y=d.getFullYear();
+ const m=String(d.getMonth()+1).padStart(2,"0");
+ const day=String(d.getDate()).padStart(2,"0");
+ end.value=`${y}-${m}-${day}`;
+}
+function toggleFaultType(){
+ const type=document.getElementById('s_type')?.value||'';
+ const field=document.getElementById('faultTypeField');
+ const select=document.getElementById('s_faultType');
+ const show=type==='Hasar / Arıza';
+ if(field) field.style.display=show?'':'none';
+ if(!show && select) select.value='';
+ toggleMechanicalNote();
+}
+function toggleMechanicalNote(){
+ const fault=document.getElementById('s_faultType')?.value||'';
+ const note=document.getElementById('s_note');
+ if(!note)return;
+ note.classList.remove('fault-mechanical');
+ note.rows=3;
+}
+async function saveService(e){
+ e.preventDefault();
+ const plate=gv('s_vehicle');
+ const r={plate,date:gv('s_date'),type:gv('s_type'),faultType:gv('s_faultType'),km:gv('s_km'),cost:gv('s_cost'),nextKm:gv('s_nextKm'),company:gv('s_company'),status:normalizeServiceStatus(gv('s_status')),note:gv('s_note')};
+ const idx=document.getElementById('serviceEditIndex').value;
+ if(idx==='')SERVICES.push(r);
+ else{
+   const n=Number(idx);
+   if(!Number.isInteger(n)||n<0||n>=SERVICES.length){alert('Düzenlenecek servis kaydı bulunamadı.');return}
+   SERVICES[n]=r;
+ }
+ await persistAndReload();
+}
 function openServiceForVehicle(plate){openServiceForm(plate)}
 function editService(idx){const s=SERVICES[Number(idx)];if(!s){alert('Servis kaydı bulunamadı.');return}openServiceForm(s.plate,Number(idx))}
-function deleteService(idx){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>deleteService(idx);document.getElementById('adminLock').classList.add('show');setTimeout(()=>document.getElementById('adminPasswordInput')?.focus(),50);return}const s=SERVICES[Number(idx)];if(!s)return;if(!confirm((s.plate||'Araç')+' servis kaydı silinsin mi?'))return;SERVICES.splice(Number(idx),1);persist();refreshDashboard();const servicePageOpen=document.getElementById('navView')?.style.display!=='none'&&document.getElementById('navViewTitle')?.textContent.includes('Servis Kayıtları');if(servicePageOpen){renderServicePage();return;}const x=DATA.find(v=>normalize(v['ARAC PLAKASI'])===normalize(s.plate));if(x)openModal(x)}
+function deleteService(idx){
+ const n=Number(idx);
+ const s=SERVICES[n];
+ if(!s){alert('Servis kaydı bulunamadı.');return}
+ if(!confirm('Bu servis kaydı silinsin mi?'))return;
+ SERVICES.splice(n,1);
+ persistAndReload();
+}
 function renderServiceHistory(plate){const arr=SERVICES.filter(s=>normalize(s.plate)===normalize(plate)).sort((a,b)=>(b.date||'').localeCompare(a.date||''));if(!arr.length)return '<div class="notice">Bu araç için henüz bakım/servis kaydı bulunmuyor.</div>';return '<div class="service-list">'+arr.map(s=>{const idx=SERVICES.indexOf(s);return `<div class="service-item"><div class="service-top"><span>${escapeHtml(s.type)}</span><span>${fmt(s.date)}</span></div><div class="service-meta">${s.km?Number(s.km).toLocaleString('tr-TR')+' km · ':''}${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':''}</div><div class="service-note"><b>Not:</b> ${escapeHtml(s.note||'Not yok')}</div><div class="service-actions"><button type="button" class="secondary" onclick="editService(${idx})">✏️ Düzenle</button><button type="button" class="danger-btn" onclick="deleteService(${idx})">🗑️ Sil</button></div></div>`}).join('')+'</div>'}
 function renderServicePage(){
   const body=document.getElementById('navViewBody');
@@ -396,7 +551,7 @@ function renderServicePage(){
     return `<tr>
       <td><span class="plate">${escapeHtml(s.plate||'—')}</span><span class="sub">${escapeHtml(vehicle?.['GÖREV YERİ']||'')}</span></td>
       <td>${escapeHtml(fmt(s.date)||'—')}</td>
-      <td><span class="tag">${escapeHtml(s.type||'—')}</span></td><td><span class="tag">${escapeHtml(s.status||'Talep Aşamasında')}</span></td><td>${escapeHtml(s.company||'—')}</td>
+      <td><span class="tag">${escapeHtml(s.type||'—')}</span></td><td><span class="tag">${escapeHtml(normalizeServiceStatus(s.status))}</span></td><td>${escapeHtml(s.company||'—')}</td>
       <td>${s.km?Number(s.km).toLocaleString('tr-TR')+' km':'—'}</td>
       <td>${s.cost?Number(s.cost).toLocaleString('tr-TR',{minimumFractionDigits:2})+' ₺':'—'}</td>
       <td>${s.nextKm?Number(s.nextKm).toLocaleString('tr-TR')+' km':'—'}</td>
@@ -425,16 +580,25 @@ function clearServicePageFilters(){
   renderServicePage();
 }
 function exportBackup(){const payload={version:2,exportedAt:new Date().toISOString(),vehicles:DATA,services:SERVICES};const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}));a.download='112_filo_yedek_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)}
-function importBackup(input){if(Date.now()>=adminUnlockedUntil){adminPendingAction=()=>importBackup(input);document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];persist();refreshDashboard();renderLocations();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
+function importBackup(input){const f=input.files&&input.files[0];if(!f)return;const rd=new FileReader();rd.onload=e=>{try{const p=JSON.parse(e.target.result);if(!Array.isArray(p.vehicles))throw new Error('Geçersiz yedek');DATA.splice(0,DATA.length,...p.vehicles);SERVICES=Array.isArray(p.services)?p.services:[];normalizeAllServiceStatuses();persist();refreshLocationFilter();refreshDashboard();render();alert('Yedek başarıyla yüklendi.')}catch(err){alert('Yedek dosyası okunamadı.')}};rd.readAsText(f);input.value=''}
 
-document.addEventListener("keydown",e=>{if(document.getElementById("siteGate")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();enterSite()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
-function init(){
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("menu-open")){closeMobileMenu();return;} if(document.getElementById("siteGate")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();enterSite()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Enter"){e.preventDefault();confirmAdminPassword()}if(document.getElementById("adminLock")?.classList.contains("show")&&e.key==="Escape"){closeAdminLock()}});
+function refreshLocationFilter(){
+ const el=document.getElementById("location");
+ if(!el)return;
+ const current=el.value;
+ const loc=[...new Set(DATA.map(x=>x["GÖREV YERİ"]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
+ el.innerHTML='<option value="">Tüm görev yerleri</option>'+loc.map(x=>`<option value="${escapeHtml(x)}">${escapeHtml(x)}</option>`).join("");
+ if(loc.includes(current)) el.value=current;
+}
+async function init(){
  initSiteGate();
- loadSaved();
- document.getElementById("today").textContent=getToday().toLocaleDateString("tr-TR"); const loc=[...new Set(DATA.map(x=>x["GÖREV YERİ"]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"tr"));
- document.getElementById("location").innerHTML='<option value="">Tüm görev yerleri</option>'+loc.map(x=>`<option>${x}</option>`).join("");
- refreshDashboard(); render();
- ["search","location","condition"].forEach(id=>document.getElementById(id).addEventListener("input",render));
+ document.getElementById("today").textContent=getToday().toLocaleDateString("tr-TR");
+ await loadSaved();
+ refreshLocationFilter();
+ refreshDashboard();
+ render();
+ ["search","location","condition"].forEach(id=>document.getElementById(id)?.addEventListener("input",render));
 }
 function render(){
  const q=normalize(document.getElementById("search").value), loc=document.getElementById("location").value, cond=document.getElementById("condition").value;
@@ -451,14 +615,14 @@ function render(){
  <td>${x["MARKASI"]||"—"}</td><td>${x["MODEL YILI"]?String(x["MODEL YILI"]).replace(/\.0$/,"" ) : "—"}</td><td>${x["ÇEKER"]||"—"}</td>
  <td>${x["GÖREV YERİ"]||"—"}</td><td>${status(x["MUAYENE BİTİŞ"])}<span class="sub">${fmt(x["MUAYENE BİTİŞ"])}</span></td>
  <td>${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}<span class="sub">${fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</span></td>
- <td>${x["EK C MUAYENE"]?((String(x["EK C MUAYENE"]).toUpperCase()==="MUAF")?'<span class="status ok">MUAF</span>':`<span class="sub">${fmt(x["EK C MUAYENE"])}</span>`):"—"}</td>
+ <td>${String(x["EK C MUAYENE"]||"").trim().toUpperCase()==="MUAF"?'<span class="status ok">MUAF</span>':status(x["EK C MUAYENE"])+`<span class="sub">${fmt(x["EK C MUAYENE"])}</span>`}</td>
  <td>${normalize(x["KASKO"])==="evet"?'<span class="status ok">EVET</span>':'<span class="status danger">HAYIR</span>'}</td>
- <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td><td>${escapeHtml(x["ÜRETİCİ FİRMA"]||"—")}</td></tr>`).join("");
+ <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td><td style="text-align:center">${x["ÜRETİCİ FİRMA"]?`<span class="producer-status">${escapeHtml(x["ÜRETİCİ FİRMA"])}</span>`:"—"}</td></tr>`).join("");
 }
 function openModal(x){
  document.getElementById("mTitle").textContent=x["ARAC PLAKASI"]||"Araç";
  document.getElementById("mSub").textContent=`${x["MARKASI"]||""} · ${x["GÖREV YERİ"]||""}`;
- const fields=[["Marka",x["MARKASI"]],["Model Yılı",x["MODEL YILI"]],["Kilometre",x["KİLOMETRE"]?Number(x["KİLOMETRE"]).toLocaleString('tr-TR')+' km':"—"],["Çeker",x["ÇEKER"]],["Görev Yeri",x["GÖREV YERİ"]],["Motor Seri No",x["MOTOR SERİ NO"]],["Şasi Seri No",x["ŞASİ SERİ NO"]],["Ruhsat Belge No",x["RUHSAT BELGE NO"]],["Kasko",x["KASKO"]],["Üretici Firma",x["ÜRETİCİ FİRMA"]],["Klima",x["KLİMA DURUMU"]],["Sigorta Başlangıç",fmt(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"])],["Sigorta Bitiş",fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])],["Muayene Başlangıç",fmt(x["MUAYENE BAŞLANGIÇ"])],["Muayene Bitiş",fmt(x["MUAYENE BİTİŞ"])],["Ek C Muayene",x["EK C MUAYENE"]?.startsWith("202")?fmt(x["EK C MUAYENE"]):x["EK C MUAYENE"]]];
+ const fields=[["Marka",x["MARKASI"]],["Model Yılı",String(x["MODEL YILI"]??"").replace(/\.0+$/,"" )],["Kilometre",x["KİLOMETRE"]?Number(x["KİLOMETRE"]).toLocaleString('tr-TR')+' km':"—"],["Çeker",x["ÇEKER"]],["Görev Yeri",x["GÖREV YERİ"]],["Motor Seri No",x["MOTOR SERİ NO"]],["Şasi Seri No",x["ŞASİ SERİ NO"]],["Ruhsat Belge No",x["RUHSAT BELGE NO"]],["Kasko",x["KASKO"]],["Üretici Firma",x["ÜRETİCİ FİRMA"]],["Klima",x["KLİMA DURUMU"]],["Sigorta Başlangıç",fmt(x["ZORUNLU TRAFİK SİGORTASI BAŞLANGIÇ"])],["Sigorta Bitiş",fmt(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])],["Muayene Başlangıç",fmt(x["MUAYENE BAŞLANGIÇ"])],["Muayene Bitiş",fmt(x["MUAYENE BİTİŞ"])],["Ek C Muayene",x["EK C MUAYENE"]?.startsWith("202")?fmt(x["EK C MUAYENE"]):x["EK C MUAYENE"]]];
  document.getElementById("mBody").innerHTML=(x["FOTOĞRAF"]?'<img class="detail-photo" src="'+x["FOTOĞRAF"]+'" alt="Araç fotoğrafı">':"")+`<div class="notice">Muayene: ${status(x["MUAYENE BİTİŞ"])} &nbsp; Sigorta: ${status(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])}</div><div class="facts">${fields.map(([a,b])=>`<div class="fact"><b>${a}</b><span>${escapeHtml(b||"—")}</span></div>`).join("")}</div><div class="panel" style="margin-top:14px;overflow:visible"><div class="panel-head"><h2>🛠️ Bakım & Servis Geçmişi</h2><span class="spacer"><button type="button" id="addServiceForVehicleBtn">+ Kayıt Ekle</button></span></div><div style="padding:12px">${renderServiceHistory(x["ARAC PLAKASI"])}</div></div><div style="display:flex;gap:10px;justify-content:flex-end;margin-top:18px"><button type="button" class="secondary" id="detailEditBtn">✏️ Düzenle</button><button type="button" id="detailDeleteBtn" class="danger-btn">🗑️ Sil</button></div>`;
  document.getElementById("detailEditBtn").onclick=e=>{e.preventDefault();editVehicleByPlate(x["ARAC PLAKASI"])};document.getElementById("detailDeleteBtn").onclick=e=>{e.preventDefault();deleteVehicleByPlate(x["ARAC PLAKASI"])};const addServiceBtn=document.getElementById("addServiceForVehicleBtn");if(addServiceBtn){addServiceBtn.onclick=e=>{e.preventDefault();e.stopPropagation();openServiceForVehicle(x["ARAC PLAKASI"]||"");};}document.getElementById("detail").classList.add("show");
 }
@@ -467,7 +631,10 @@ document.getElementById("detail").addEventListener("click",e=>{if(e.target.id===
 document.getElementById("formDetail").addEventListener("click",e=>{if(e.target.id==="formDetail")closeVehicleForm()});
 document.getElementById("serviceDetail").addEventListener("click",e=>{if(e.target.id==="serviceDetail")closeServiceForm()});
 document.getElementById("f_muybas").addEventListener("change",autoSetInspectionEndDate);
-function closeNavView(){document.body.classList.remove("service-page","menu-page");document.getElementById("navView").style.display="none";}
+document.getElementById("f_sigbas").addEventListener("change",autoSetInsuranceEndDate);
+function closeMobileMenu(){document.body.classList.remove("menu-open");const b=document.getElementById("mobileMenuToggle");if(b){b.setAttribute("aria-expanded","false");b.setAttribute("aria-label","Menüyü aç");b.textContent="☰";}}
+function toggleMobileMenu(){const open=document.body.classList.toggle("menu-open");const b=document.getElementById("mobileMenuToggle");if(b){b.setAttribute("aria-expanded",String(open));b.setAttribute("aria-label",open?"Menüyü kapat":"Menüyü aç");b.textContent=open?"×":"☰";}}
+function closeNavView(){closeMobileMenu();document.body.classList.remove("service-page","menu-page");document.getElementById("navView").style.display="none";}
 function showHomePage(){
   document.body.classList.remove("vehicle-page","service-page");
   document.getElementById("navView").style.display="none";
@@ -513,7 +680,7 @@ function openNavView(kind){
   if(kind==="inspection"){
     title.textContent="🔧 Muayene";
     const risk=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])!=="ok");
-    const next90=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90});
+    const next90=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=60});
     body.innerHTML=`<div class="nav-stat-grid"><div class="card"><div class="label">Toplam Araç</div><div class="metric">${DATA.length}</div></div><div class="card"><div class="label">90 Gün İçinde</div><div class="metric warn">${next90.length}</div></div><div class="card"><div class="label">Riskli / Geçmiş</div><div class="metric danger">${risk.length}</div></div><div class="card"><div class="label">Uygun</div><div class="metric ok">${DATA.length-risk.length}</div></div></div>`;
   }
   if(kind==="ac"){
@@ -527,55 +694,141 @@ function openNavView(kind){
     renderServicePage();
   }
   if(kind==="reports"){
+    document.body.classList.add("menu-page");
     title.textContent="📊 Raporlar";
     const total=DATA.length;
-    const count=v=>DATA.filter(v).length;
-    const active=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
-    const kasko=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
-    const insuredRisk=DATA.filter(x=>docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])!=="ok").length;
-    const inspectionRisk=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])!=="ok").length;
-    const inspection90=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=90}).length;
+    const ford=DATA.filter(x=>normalize(x["MARKASI"]).includes("ford")).length;
     const four=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*4")).length;
-    const producers=["EMS","AC","DORSER"].map(p=>({p,n:DATA.filter(x=>normalize(x["ÜRETİCİ FİRMA"])===normalize(p)).length}));
-    const locations={};DATA.forEach(x=>{const k=x["GÖREV YERİ"]||"Belirtilmemiş";locations[k]=(locations[k]||0)+1});
-    const serviceStatuses=["Talep Aşamasında","Onarımda","Tamamlandı"].map(st=>({st,n:SERVICES.filter(x=>(x.status||"Talep Aşamasında")===st).length}));
-    const totalCost=SERVICES.reduce((a,x)=>a+(Number(x.cost)||0),0);
-    const avgCost=SERVICES.length?totalCost/SERVICES.length:0;
-    const topLoc=Object.entries(locations).sort((a,b)=>b[1]-a[1]).slice(0,8);
-    const bars=(items,max)=>items.map(([label,n])=>`<div class="progress-row"><div class="progress-meta"><span>${escapeHtml(label)}</span><b>${n}</b></div><div class="progress-track"><i style="width:${max?Math.round(n/max*100):0}%"></i></div></div>`).join("");
+    const twoByFour=DATA.filter(x=>normalize(x["ÇEKER"]).includes("4*2")||normalize(x["ÇEKER"]).includes("2*4")).length;
+    const unknownDrive=Math.max(0,total-four-twoByFour);
+    const insuranceExpired=DATA.filter(x=>docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])==="danger").length;
+    const insuranceSoon=DATA.filter(x=>{const d=days(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"]);return d>=0&&d<=60}).length;
+    const insuranceOk=Math.max(0,total-insuranceExpired-insuranceSoon);
+    const insured=DATA.filter(x=>normalize(x["KASKO"])==="evet").length;
+    const noKasko=Math.max(0,total-insured);
+    const inspectionExpired=DATA.filter(x=>docStatus(x["MUAYENE BİTİŞ"])==="danger").length;
+    const inspectionSoon=DATA.filter(x=>{const d=days(x["MUAYENE BİTİŞ"]);return d>=0&&d<=60}).length;
+    const inspectionOk=Math.max(0,total-inspectionExpired-inspectionSoon);
+    const activeAc=DATA.filter(x=>normalize(x["KLİMA DURUMU"])==="aktif").length;
+    const passiveAc=Math.max(0,total-activeAc);
+    const acRate=total?Math.round(activeAc/total*100):0;
+    const modelYears=DATA.map(x=>Number.parseInt(x["MODEL YILI"],10)).filter(Number.isFinite);
+    const avgAge=modelYears.length?(new Date().getFullYear()-modelYears.reduce((a,b)=>a+b,0)/modelYears.length):0;
+    const newest=modelYears.length?Math.max(...modelYears):0;
+    const oldest=modelYears.length?Math.min(...modelYears):0;
+    const age0to5=modelYears.filter(y=>new Date().getFullYear()-y<=5).length;
+    const age6to10=modelYears.filter(y=>{const a=new Date().getFullYear()-y;return a>=6&&a<=10}).length;
+    const age11plus=modelYears.filter(y=>new Date().getFullYear()-y>=11).length;
+    const locationMap={};DATA.forEach(x=>{const k=String(x["GÖREV YERİ"]||"Belirtilmemiş").trim()||"Belirtilmemiş";locationMap[k]=(locationMap[k]||0)+1});
+    const topLocations=Object.entries(locationMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const brandMap={};DATA.forEach(x=>{const raw=String(x["MARKASI"]||"Bilinmiyor").trim()||"Bilinmiyor";const brand=raw.split("/")[0].trim()||"Bilinmiyor";brandMap[brand]=(brandMap[brand]||0)+1});
+    const topBrands=Object.entries(brandMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const faults=(typeof FAULTS!=="undefined" && Array.isArray(FAULTS))?FAULTS:[];
+    const faultTotal=faults.length;
+    const faultOpen=faults.filter(f=>["Açık","İşleme Alındı","Onarımda"].includes(String(f.status||""))).length;
+    const faultDone=faults.filter(f=>String(f.status||"")==="Tamamlandı").length;
+    const faultUrgent=faults.filter(f=>String(f.priority||"")==="Acil").length;
+    const faultHigh=faults.filter(f=>String(f.priority||"")==="Yüksek").length;
+    const faultTypeMap={};faults.forEach(f=>{const k=String(f.type||"Diğer");faultTypeMap[k]=(faultTypeMap[k]||0)+1});
+    const topFaultTypes=Object.entries(faultTypeMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const serviceTotal=SERVICES.length;
+    const serviceCost=SERVICES.reduce((sum,s)=>sum+(Number.parseFloat(String(s.cost||"").replace(/[^0-9,.-]/g,"").replace(/\./g,"").replace(",","."))||0),0);
+    const serviceKm=SERVICES.map(s=>Number.parseInt(s.km,10)).filter(Number.isFinite);
+    const avgServiceKm=serviceKm.length?Math.round(serviceKm.reduce((a,b)=>a+b,0)/serviceKm.length):0;
+    const serviceTypeMap={};SERVICES.forEach(s=>{const k=String(s.type||"Diğer");serviceTypeMap[k]=(serviceTypeMap[k]||0)+1});
+    const topServiceTypes=Object.entries(serviceTypeMap).sort((a,b)=>b[1]-a[1]).slice(0,6);
+    const pct=(v,max)=>max?Math.round(v/max*100):0;
+    const listRows=(items)=>items.length?items.map(([name,count])=>`<div class="progress-row"><div class="progress-meta"><span>${escapeHtml(name)}</span><span>${count} araç</span></div><div class="progress-track"><i style="width:${pct(count,total)}%"></i></div></div>`).join(""):`<div class="notice">Henüz yeterli veri bulunmuyor.</div>`;
+    const faultRows=(items)=>items.length?items.map(([name,count])=>`<div class="progress-row"><div class="progress-meta"><span>${escapeHtml(name)}</span><span>${count} kayıt</span></div><div class="progress-track"><i style="width:${pct(count,faultTotal)}%"></i></div></div>`).join(""): `<div class="notice">Henüz arıza bildirimi bulunmuyor.</div>`;
+    const serviceRows=(items)=>items.length?items.map(([name,count])=>`<div class="progress-row"><div class="progress-meta"><span>${escapeHtml(name)}</span><span>${count} kayıt</span></div><div class="progress-track"><i style="width:${pct(count,serviceTotal)}%"></i></div></div>`).join(""): `<div class="notice">Henüz servis kaydı bulunmuyor.</div>`;
     body.innerHTML=`
-      <div class="nav-stat-grid">
-        <div class="card"><div class="label">Toplam Araç</div><div class="metric">${total}</div></div>
-        <div class="card"><div class="label">Kasko</div><div class="metric">${kasko} <span class="sub">${total?Math.round(kasko/total*100):0}%</span></div></div>
-        <div class="card"><div class="label">Klima Aktif</div><div class="metric">${active} <span class="sub">${total?Math.round(active/total*100):0}%</span></div></div>
-        <div class="card"><div class="label">4×4</div><div class="metric">${four}</div></div>
-        <div class="card"><div class="label">Sigorta Riski</div><div class="metric danger">${insuredRisk}</div></div>
-        <div class="card"><div class="label">Muayene Riski</div><div class="metric danger">${inspectionRisk}</div></div>
-        <div class="card"><div class="label">90 Gün İçinde Muayene</div><div class="metric warn">${inspection90}</div></div>
-        <div class="card"><div class="label">Servis Maliyeti</div><div class="metric">${totalCost.toLocaleString('tr-TR',{minimumFractionDigits:2})} ₺</div></div>
-      </div>
-      <div class="dashboard-grid">
-        <div class="panel"><div class="panel-head"><h2>🚑 Üretici Firma Dağılımı</h2></div><div class="side-list">${bars(producers.map(x=>[x.p,x.n]),Math.max(1,...producers.map(x=>x.n)))}</div></div>
-        <div class="panel"><div class="panel-head"><h2>🛠️ Servis Durumları</h2></div><div class="side-list">${bars(serviceStatuses.map(x=>[x.st,x.n]),Math.max(1,...serviceStatuses.map(x=>x.n)))}
-          <div class="notice">Ortalama servis maliyeti: <b>${avgCost.toLocaleString('tr-TR',{minimumFractionDigits:2})} ₺</b></div></div></div>
-      </div>
-      <div class="dashboard-grid">
-        <div class="panel"><div class="panel-head"><h2>📍 En Yoğun Görev Yerleri</h2></div><div class="side-list">${bars(topLoc,Math.max(1,...topLoc.map(x=>x[1])))}</div></div>
-        <div class="panel"><div class="panel-head"><h2>📋 Belge / Donanım Özeti</h2></div><div class="side-list">
-          <div class="row"><div class="row-top"><span>Sigorta uygun</span><b>${total-insuredRisk}</b></div></div>
-          <div class="row"><div class="row-top"><span>Muayene uygun</span><b>${total-inspectionRisk}</b></div></div>
-          <div class="row"><div class="row-top"><span>Kaskolu</span><b>${kasko}</b></div></div>
-          <div class="row"><div class="row-top"><span>Klima aktif</span><b>${active}</b></div></div>
+     <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>📈 Genel Filo İstatistikleri</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">Toplam Araç</div><div class="metric">${total}</div></div>
+          <div class="card"><div class="label">4×4</div><div class="metric">${four}</div></div>
+          <div class="card"><div class="label">Ford</div><div class="metric">${ford}</div></div>
+          <div class="card"><div class="label">Ortalama Araç Yaşı</div><div class="metric">${avgAge.toFixed(1)} <small>yıl</small></div></div>
+          <div class="card"><div class="label">En Yeni Model</div><div class="metric">${newest||"—"}</div></div>
+          <div class="card"><div class="label">En Eski Model</div><div class="metric">${oldest||"—"}</div></div>
         </div></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>🛡️ Belge & Güvence Durumu</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">Sigortası Uygun</div><div class="metric ok">${insuranceOk}</div></div>
+          <div class="card"><div class="label">Sigorta 90 Gün İçinde</div><div class="metric warn">${insuranceSoon}</div></div>
+          <div class="card"><div class="label">Sigortası Geçmiş</div><div class="metric danger">${insuranceExpired}</div></div>
+          <div class="card"><div class="label">Kaskolu</div><div class="metric ok">${insured}</div></div>
+          <div class="card"><div class="label">Kaskosuz</div><div class="metric warn">${noKasko}</div></div>
+          <div class="card"><div class="label">Muayene Uygun</div><div class="metric ok">${inspectionOk}</div></div>
+          <div class="card"><div class="label">Muayene 90 Gün İçinde</div><div class="metric warn">${inspectionSoon}</div></div>
+          <div class="card"><div class="label">Muayenesi Geçmiş</div><div class="metric danger">${inspectionExpired}</div></div>
+        </div></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>🚑 Teknik Filo Dağılımı</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">Klima Aktif</div><div class="metric ok">${activeAc}</div></div>
+          <div class="card"><div class="label">Klima Pasif / Arızalı</div><div class="metric warn">${passiveAc}</div></div>
+          <div class="card"><div class="label">Klima Aktif Oran</div><div class="metric">${acRate}%</div></div>
+          <div class="card"><div class="label">4×4 Oranı</div><div class="metric">${pct(four,total)}%</div></div>
+          <div class="card"><div class="label">4×2 / 2×4</div><div class="metric">${twoByFour}</div></div>
+          <div class="card"><div class="label">Çekiş Bilgisi Belirsiz</div><div class="metric">${unknownDrive}</div></div>
+        </div></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>🎂 Araç Yaş Dağılımı</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">0–5 Yaş</div><div class="metric">${age0to5}</div></div>
+          <div class="card"><div class="label">6–10 Yaş</div><div class="metric">${age6to10}</div></div>
+          <div class="card"><div class="label">11+ Yaş</div><div class="metric">${age11plus}</div></div>
+          <div class="card"><div class="label">Model Yılı Verili</div><div class="metric">${modelYears.length}</div></div>
+        </div></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>📍 Görev Yeri Dağılımı</h2></div>
+        <div class="modal-body">${listRows(topLocations)}</div>
+      </div>
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>🏭 Marka Dağılımı</h2></div>
+        <div class="modal-body">${listRows(topBrands)}</div>
+      </div>
+
+
+      <div class="panel" style="box-shadow:none;margin-bottom:16px">
+        <div class="panel-head"><h2>⚠️ Arıza İstatistikleri</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">Toplam Bildirim</div><div class="metric">${faultTotal}</div></div>
+          <div class="card"><div class="label">Açık / İşlemde</div><div class="metric warn">${faultOpen}</div></div>
+          <div class="card"><div class="label">Tamamlanan</div><div class="metric ok">${faultDone}</div></div>
+          <div class="card"><div class="label">Acil</div><div class="metric danger">${faultUrgent}</div></div>
+          <div class="card"><div class="label">Yüksek Öncelik</div><div class="metric warn">${faultHigh}</div></div>
+        </div><div style="margin-top:16px">${faultRows(topFaultTypes)}</div></div>
+      </div>
+
+      <div class="panel" style="box-shadow:none">
+        <div class="panel-head"><h2>🛠️ Servis İstatistikleri</h2></div>
+        <div class="modal-body"><div class="nav-stat-grid">
+          <div class="card"><div class="label">Toplam Servis</div><div class="metric">${serviceTotal}</div></div>
+          <div class="card"><div class="label">Toplam Servis Maliyeti</div><div class="metric">${serviceCost.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})} <small>₺</small></div></div>
+          <div class="card"><div class="label">Ortalama Servis KM</div><div class="metric">${avgServiceKm?avgServiceKm.toLocaleString("tr-TR"):"—"}</div></div>
+          <div class="card"><div class="label">KM Bilgisi Olan Kayıt</div><div class="metric">${serviceKm.length}</div></div>
+        </div><div style="margin-top:16px">${serviceRows(topServiceTypes)}</div></div>
       </div>`;
   }
-  if(kind==="settings"){
+    if(kind==="settings"){
     title.textContent="⚙️ Ayarlar";
     body.innerHTML=`<div class="action-row"><span class="admin-badge">🔒 Yönetici gerekli</span><button type="button" onclick="downloadCSV()">CSV Dışa Aktar</button><button type="button" class="secondary" onclick="exportBackup()">⬇️ Yedek Al</button><button type="button" class="secondary" onclick="document.getElementById('backupInput').click()">⬆️ Yedek Yükle</button><input id="backupInput" type="file" accept="application/json" style="display:none" onchange="importBackup(this)"></div><div class="notice">Veriler bu tarayıcıda yerel olarak saklanır. CSV dışa aktarma ve JSON yedekleme işlemleri bu sayfadan yapılır.</div>`;
   }
   view.scrollIntoView({behavior:"smooth",block:"start"});
 }
-document.querySelectorAll("aside .nav").forEach(n=>n.addEventListener("click",()=>openNavView(n.dataset.nav)));
+document.querySelectorAll("aside .nav").forEach(n=>n.addEventListener("click",()=>{openNavView(n.dataset.nav);closeMobileMenu();}));
 function downloadCSV(){
  if(Date.now()>=adminUnlockedUntil){adminPendingAction=downloadCSV;document.getElementById("adminLock").classList.add("show");setTimeout(()=>document.getElementById("adminPasswordInput")?.focus(),50);return;}
  const cols=Object.keys(DATA[0]||{}); const esc=v=>`"${String(v??"").replaceAll('"','""')}"`;
@@ -590,18 +843,4 @@ setInterval(()=>{const el=document.getElementById("today");if(el)el.textContent=
 window.addEventListener('contextmenu', function(e){ e.preventDefault(); });
 </script>
 
-<script>
-(function(){
-  const originalPersist=window.persist;
-  if(typeof originalPersist!=="function") return;
-  window.persist=function(){
-    const ok=originalPersist();
-    if(ok){
-      const el=document.getElementById("autoSaveStatus");
-      if(el){el.textContent="✓ Otomatik kaydedildi";el.style.opacity="1";setTimeout(()=>el.style.opacity=".65",1800);}
-    }
-    return ok;
-  };
-})();
-</script>
 </body></html>
