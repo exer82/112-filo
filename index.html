@@ -41,6 +41,12 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 .service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}
 .producer-status{display:inline-flex;align-items:center;justify-content:center;min-width:64px;padding:5px 10px;border-radius:999px;background:#eaf7ef;color:#18864b;font-weight:800;text-align:center;}
 
+/* Servis Kayıtları: boş kayıt durumunda üstte boşluk bırakma */
+.service-page .nav-view{min-height:0;height:auto}
+.service-page .service-page-inner{min-height:0;margin-top:0}
+.service-page .service-table-wrap{min-height:0;height:auto}
+.service-page .service-empty{padding:18px}
+
 /* Servis Kayıtları tek akış düzeni */
 .service-page .nav-view{background:transparent;border:0;box-shadow:none;overflow:visible}
 .service-page .service-page-inner{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
@@ -755,6 +761,7 @@ function openNavView(kind){
   }
   if(kind==="services"){
     document.body.classList.add("service-page");
+    window.scrollTo({top:0,behavior:"auto"});
     title.textContent="🛠️ Servis Kayıtları";
     renderServicePage();
   }
