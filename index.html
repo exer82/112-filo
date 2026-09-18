@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Giresun Ambulans Takip Sistemi</title>
+<title>Araç Takip Sistemi</title>
 <style>
 
 .admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
@@ -132,8 +132,8 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 </div>
 <header>
   <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü aç" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
-  <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
-  <div class="brand">Giresun Ambulans Takip Sistemi <small>Giresun İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="logo"><img src="https://www.shutterstock.com/image-vector/vector-logo-ambulance-decorative-cut-600w-1395258383.jpg" alt="Araç Takip Sistemi" referrerpolicy="no-referrer"></div>
+  <div class="brand">Araç Takip Sistemi <small>Ambulans Servisi Başhekimliği</small></div>
   <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
 </header>
 <div class="layout">
@@ -142,7 +142,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
   <div class="nav" data-nav="vehicles"><span class="ico">🚑</span> Araçlar</div>
   <div class="nav" data-nav="services"><span class="ico">🛠️</span> Servis Kayıtları</div>
   <div class="nav" data-nav="locations"><span class="ico">📍</span> Görev Yerleri</div>
-  <div class="nav-title">Yönetim</div>
+  <div class="nav-title">Yönetim</div>a
   <div class="nav" data-nav="reports"><span class="ico">📊</span> Raporlar</div>
   <div class="nav" data-nav="settings"><span class="ico">⚙️</span> Ayarlar</div>
 </aside>
@@ -198,13 +198,13 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="fact"><b>Marka</b><input id="f_marka"></div>
 <div class="fact"><b>Model Yılı</b><input id="f_model"></div>
     <div class="fact"><b>Kilometre</b><input type="number" id="f_km" min="0"></div>
-<div class="fact"><b>Çeker</b><input id="f_ceker"></div>
+<div class="fact"><b>Çeker</b><select id="f_ceker"><option value="">Seçiniz</option><option>4x2</option><option>4x4</option></select></div>
 <div class="fact"><b>Görev Yeri</b><input id="f_gorev"></div>
-<div class="fact"><b>Klima Durumu</b><select id="f_klima"><option>AKTİF</option><option>PASİF</option></select></div>
+<div class="fact"><b>Klima Durumu</b><select id="f_klima"><option>AKTİF</option><option>ARIZALI</option></select></div>
 <div class="fact"><b>Motor Seri No</b><input id="f_motor"></div>
 <div class="fact"><b>Şasi Seri No</b><input id="f_sasi"></div>
 <div class="fact"><b>Ruhsat Belge No</b><input id="f_ruhsat"></div>
-<div class="fact"><b>Kasko</b><select id="f_kasko"><option>EVET</option><option>HAYIR</option></select></div>
+<div class="fact"><b>Kasko</b><select id="f_kasko"><option value="">Seçiniz</option><option>EVET</option><option>HAYIR</option></select></div>
 <div class="fact"><b>Üretici Firma</b><select id="f_uretici"><option value="">Seçiniz</option><option>EMS</option><option>AC</option><option>DORSER</option></select></div>
 <div class="fact"><b>Sigorta Başlangıç</b><input type="date" id="f_sigbas"></div>
 <div class="fact"><b>Sigorta Bitiş</b><input type="date" id="f_sigbit"></div>
