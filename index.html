@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Araç Takip Sistemi</title>
+<title>Giresun Ambulans Takip Sistemi</title>
 <style>
 
-.admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
+.admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGatae{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
 :root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#6b7280;--line:#e6e9ef;--primary:#1769e0;--primary2:#0f56bd;--ok:#159957;--warn:#e9a400;--danger:#dc3545;--shadow:0 8px 28px rgba(20,32,55,.07)}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.45 Inter,Segoe UI,Arial,sans-serif}
 header{height:78px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 26px;gap:18px;position:sticky;top:0;z-index:20;position:sticky}
@@ -40,6 +40,14 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 .service-note-input{width:100%;box-sizing:border-box;display:block;height:90px;min-height:90px;resize:vertical}
 .service-page-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.service-page-toolbar .search{min-width:220px}.service-table-wrap{overflow-x:auto}.service-table{width:100%;border-collapse:collapse;min-width:1000px}.service-table th,.service-table td{padding:10px 11px;border-bottom:1px solid #edf0f4;text-align:left;vertical-align:top}.service-table th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0}.service-note-cell{white-space:normal;min-width:220px;color:#344054}.service-empty{padding:30px;text-align:center;color:#667085}.service-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:16px}@media(max-width:800px){.service-kpi-grid{grid-template-columns:repeat(2,minmax(140px,1fr))}}@media(max-width:800px){header{height:74px;padding:0 12px}.logo{width:54px;height:54px}.brand{font-size:18px}.brand small{font-size:10px}}@media(max-width:560px){.brand{position:static;transform:none;white-space:normal;flex:1;text-align:left;font-size:16px}.brand small{font-size:10px}.header-right{gap:6px}.header-right button{display:none}.logo{width:48px;height:48px}}
 .producer-status{display:inline-flex;align-items:center;justify-content:center;min-width:64px;padding:5px 10px;border-radius:999px;background:#eaf7ef;color:#18864b;font-weight:800;text-align:center;}
+
+/* Servis Kayıtları tek akış düzeni */
+.service-page .nav-view{background:transparent;border:0;box-shadow:none;overflow:visible}
+.service-page .service-page-inner{width:100%;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.service-page .service-page-inner .service-page-toolbar{padding:13px 18px;border-bottom:1px solid var(--line);margin:0}
+.service-page .service-table-wrap{width:100%;overflow-x:auto;overflow-y:visible;-webkit-overflow-scrolling:touch}
+.service-page .service-table{margin:0;min-width:1000px}
+@media(max-width:600px){.service-page .service-page-inner{border-radius:10px}.service-page .service-page-inner .service-page-toolbar{padding:12px}.service-page .service-table-wrap{max-width:100%}}
 
 /* v18 responsive mobile/tablet */
 .mobile-menu-toggle{display:none;background:#eef2f7;color:#344054;width:44px;height:44px;padding:0;border-radius:10px;font-size:22px;align-items:center;justify-content:center;flex:0 0 44px}
@@ -118,7 +126,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <header>
   <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü aç" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
   <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
-  <div class="brand">Araç Takip Sistemi <small>İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="brand">Giresun Ambulans Takip Sistemi <small>Giresun İl Ambulans Servisi Başhekimliği</small></div>
   <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
 </header>
 <div class="layout">
@@ -560,7 +568,7 @@ function renderServicePage(){
     </tr>`;
   }).join(''):`<tr><td colspan="10" class="service-empty">Filtrelere uyan servis kaydı bulunamadı.</td></tr>`;
   body.innerHTML=`
-    <div class="panel" style="box-shadow:none">
+    <div class="service-page-inner">
       <div class="toolbar service-page-toolbar">
         <input class="search" id="servicePageSearch" placeholder="Plaka, işlem türü, not ara..." value="${escapeHtml(document.getElementById('servicePageSearch')?.value||'')}">
         <select id="servicePagePlate"><option value="">Tüm araçlar</option>${plates.map(p=>`<option value="${escapeHtml(p)}" ${normalize(p)===normalize(plate)?'selected':''}>${escapeHtml(p)}</option>`).join('')}</select>
