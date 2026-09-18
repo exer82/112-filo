@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Araç Takip Sistemi</title>
+<title>Giresun Ambulans Takip Sistemi</title>
 <style>
 
 .admin-lock{background:#0b122280;position:fixed;inset:0;z-index:200;display:none;align-items:center;justify-content:center;padding:20px}.admin-lock.show{display:flex}.locked-site{overflow:hidden}.locked-site>*:not(#siteGate){visibility:hidden}.locked-site #siteGate{visibility:visible}.admin-lock .lock-box{width:min(420px,100%);background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004;padding:22px}.admin-lock .lock-icon{font-size:34px;text-align:center;margin-bottom:8px}.admin-lock h3{margin:0;text-align:center}.admin-lock p{color:#667085;text-align:center;margin:7px 0 16px}.admin-lock input{width:100%;padding:11px 12px;border:1px solid #d9dee8;border-radius:9px;outline:none}.admin-lock .lock-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:12px}.admin-badge{background:#eef5ff;color:#1769e0;border-radius:999px;padding:6px 9px;font-size:11px;font-weight:800}
@@ -26,7 +26,7 @@ select{padding:10px;border:1px solid #d9dee8;border-radius:9px;background:#fff;c
 /* Sadece servis bakım kaydındaki üç ilk seçenek için placeholder rengi */
 #s_faultType:has(> option:first-child:checked),#s_company:has(> option:first-child:checked),#s_status:has(> option:first-child:checked){color:#98a2b3}
 #s_faultType option:first-child,#s_company option:first-child,#s_status option:first-child{color:#98a2b3}
-.table-wrap{overflow:auto;max-height:calc(100vh - 360px);min-height:620px}.vehicle-page .cards,.vehicle-page .alert-panel,.vehicle-page .dashboard-grid,.vehicle-page .stat-strip,.vehicle-page .topline{display:none}.vehicle-page main{padding-top:18px}.vehicle-page .table-wrap{max-height:none;min-height:0;overflow-x:auto;overflow-y:visible}.vehicle-page .panel{width:100%}.vehicle-page footer{display:none}.service-page main{padding-top:0}.service-page .topline,.service-page .cards,.service-page .stat-strip,.service-page .dashboard-grid,.service-page .alert-panel,.service-page .grid,.service-page footer{display:none}.service-page .nav-view{display:block!important;margin-top:0}.service-page .nav-view .panel{box-shadow:none}.service-page .nav-view .panel-head{border:0;padding:0 0 16px}.service-page .nav-view .modal-body{padding:0}.menu-page main{padding-top:18px}.menu-page .topline,.menu-page .cards,.menu-page .stat-strip,.menu-page .dashboard-grid,.menu-page .alert-panel,.menu-page .grid,.menu-page footer{display:none}.menu-page .nav-view{display:block!important;margin-top:0}.menu-page .nav-view .panel{box-shadow:none}.menu-page .nav-view .panel-head{border:0;padding:0 0 16px}.vehicle-page .nav-view{display:none!important}.vehicle-page .topline,.vehicle-page .cards,.vehicle-page .alert-panel{display:none}.vehicle-page .grid{display:block}table{width:100%;border-collapse:collapse;min-width:950px}th,td{padding:11px 13px;border-bottom:1px solid #edf0f4;text-align:left;white-space:nowrap}th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0;z-index:2}tr:hover td{background:#f8fbff}.plate{font-weight:800;color:#175dcc}.sub{display:block;color:#7a8494;font-size:11px;margin-top:2px}
+.table-wrap{overflow:auto;max-height:calc(100vh - 360px);min-height:620px}.vehicle-page .cards,.vehicle-page .alert-panel,.vehicle-page .dashboard-grid,.vehicle-page .stat-strip,.vehicle-page .topline{display:none}.vehicle-page main{padding-top:18px}.vehicle-page .table-wrap{max-height:none;min-height:0;overflow-x:auto;overflow-y:visible}.vehicle-page .panel{width:100%}.vehicle-page footer{display:none}.service-page main{padding-top:0}.service-page .topline,.service-page .cards,.service-page .stat-strip,.service-page .dashboard-grid,.service-page .alert-panel,.service-page .grid,.service-page footer{display:none}.service-page .nav-view{display:block!important;margin-top:0}.service-page .nav-view .panel{box-shadow:none}.service-page .nav-view .panel-head{border:0;padding:0 0 16px}.service-page .nav-view .modal-body{padding:0}.menu-page main{padding-top:18px}.menu-page .topline,.menu-page .cards,.menu-page .stat-strip,.menu-page .dashboard-grid,.menu-page .alert-panel,.menu-page .grid,.menu-page footer{display:none}.menu-page .nav-view{display:block!important;margin-top:0}.menu-page .nav-view .panel{box-shadow:none}.menu-page .nav-view .panel-head{border:0;padding:0 0 16px}.vehicle-page .nav-view{display:none!important}.vehicle-page .topline,.vehicle-page .cards,.vehicle-page .alert-panel{display:none}.vehicle-page .grid{display:block}table{width:100%;border-collapse:collapse;min-width:950px}th,td{padding:11px 13px;border-bottom:1px solid #edf0f4;text-align:left;white-space:nowrap}th{font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#667085;background:#fafbfc;position:sticky;top:0;z-index:2}.sortable{cursor:pointer;user-select:none}.sortable:hover{color:#175dcc;background:#f2f6ff}.sort-indicator{font-size:12px;opacity:.65;margin-left:4px}tr:hover td{background:#f8fbff}.plate{font-weight:800;color:#175dcc}.sub{display:block;color:#7a8494;font-size:11px;margin-top:2px}
 .status{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:800}.status.ok{background:#e9f8f0;color:#13834d}.status.warn{background:#fff6dc;color:#9b6a00}.status.danger{background:#fdebed;color:#b42318}.status.critical{background:#b42318;color:#fff;box-shadow:0 0 0 2px #b4231820}.alert-panel{margin-bottom:18px;border:1px solid #f1b7b2;background:#fff7f6;border-radius:14px;box-shadow:var(--shadow);overflow:hidden}.alert-head{padding:14px 18px;border-bottom:1px solid #f3d0cc;display:flex;align-items:center;gap:10px}.alert-head b{color:#9f1c13}.alert-count{margin-left:auto;font-weight:800;color:#b42318}.alert-list{display:flex;gap:10px;flex-wrap:wrap;padding:12px 18px}.alert-item{border:1px solid #f0c2bd;background:#fff;border-radius:10px;padding:10px 12px;min-width:210px;cursor:pointer}.alert-item:hover{background:#fff2f0}.alert-item b{display:block;color:#b42318}.alert-item span{font-size:11px;color:#667085}.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
 .side-list{padding:8px 18px 16px}.row{padding:12px 0;border-bottom:1px solid #eef1f5}.row:last-child{border-bottom:0}.row-top{display:flex;justify-content:space-between;gap:10px;font-weight:800}.bar{height:7px;border-radius:99px;background:#edf1f6;margin-top:8px;overflow:hidden}.bar i{display:block;height:100%;background:#1769e0;border-radius:99px}
 .detail{display:none;position:fixed;inset:0;background:#0b122280;z-index:50;align-items:center;justify-content:center;padding:20px}.detail.show{display:flex}.modal{width:min(850px,100%);max-height:90vh;overflow:auto;background:#fff;border-radius:16px;box-shadow:0 25px 80px #0004}.modal-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex}.modal-body{padding:22px}.x{margin-left:auto;background:#eef2f7;color:#344054}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.fact{border:1px solid var(--line);border-radius:10px;padding:12px}.fact b{display:block;color:#667085;font-size:11px;margin-bottom:4px}.fact span{font-weight:700}.notice{padding:11px 13px;border-radius:10px;background:#f3f7ff;color:#174a99;margin:14px 0}
@@ -123,7 +123,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <div class="admin-lock show" id="siteGate">
   <div class="lock-box">
     <div class="lock-icon">🔐</div>
-    <h3>Araç Takip Sistemi</h3>
+    <h3>Giresun Ambulans Takip Sistemi</h3>
     <p>Siteye erişmek için yönetici parolasını girin.</p>
     <input type="password" id="sitePasswordInput" autocomplete="current-password" placeholder="Yönetici parolası">
     <div class="lock-actions"><button type="button" onclick="enterSite()">Giriş Yap</button></div>
@@ -133,7 +133,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
 <header>
   <button type="button" class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Menüyü aç" aria-expanded="false" onclick="toggleMobileMenu()">☰</button>
   <div class="logo"><img src="https://dosyahastane.saglik.gov.tr/Resim/258916/0/arma-logo-turkce-jpg-1202jpg.png" alt="T.C. Sağlık Bakanlığı" referrerpolicy="no-referrer"></div>
-  <div class="brand">Araç Takip Sistemi <small>İl Ambulans Servisi Başhekimliği</small></div>
+  <div class="brand">Giresun Ambulans Takip Sistemi <small>Giresun İl Ambulans Servisi Başhekimliği</small></div>
   <div class="header-right"><span class="pill" id="today"></span><button onclick="openVehicleForm()">+ Araç Ekle</button></div>
 </header>
 <div class="layout">
@@ -177,7 +177,7 @@ footer{color:#98a2b3;font-size:11px;padding:18px 0}
         <select id="condition"><option value="">Belge durumu</option><option value="ok">Uygun</option><option value="warn">Yaklaşıyor</option><option value="danger">Riskli</option></select>
       </div>
       <div class="table-wrap"><table><thead><tr>
-        <th>Plaka</th><th>Marka / Model</th><th>Model</th><th>Çeker</th><th>Görev Yeri</th><th>Muayene</th><th>Sigorta</th><th>Ek C Muayene</th><th>Kasko</th><th>Klima</th><th>Üretici Firma</th>
+        <th class="sortable" data-sort-key="ARAC PLAKASI" title="A-Z / Z-A sırala">Plaka <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="MARKASI" title="A-Z / Z-A sırala">Marka / Model <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="MODEL YILI" title="A-Z / Z-A sırala">Model <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="ÇEKER" title="A-Z / Z-A sırala">Çeker <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="GÖREV YERİ" title="A-Z / Z-A sırala">Görev Yeri <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="MUAYENE BİTİŞ" title="A-Z / Z-A sırala">Muayene <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="ZORUNLU TRAFİK SİGORTASI BİTİŞ" title="A-Z / Z-A sırala">Sigorta <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="EK C MUAYENE" title="A-Z / Z-A sırala">Ek C Muayene <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="KASKO" title="A-Z / Z-A sırala">Kasko <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="KLİMA DURUMU" title="A-Z / Z-A sırala">Klima <span class="sort-indicator">↕</span></th><th class="sortable" data-sort-key="ÜRETİCİ FİRMA" title="A-Z / Z-A sırala">Üretici Firma <span class="sort-indicator">↕</span></th>
       </tr></thead><tbody id="tbody"></tbody></table></div>
     </section>
   </div>
@@ -669,16 +669,46 @@ async function init(){
  refreshDashboard();
  render();
  ["search","location","condition"].forEach(id=>document.getElementById(id)?.addEventListener("input",render));
+ document.querySelectorAll("thead th.sortable").forEach(th=>th.addEventListener("click",()=>sortVehicles(th.dataset.sortKey)));
+}
+let vehicleSortKey="";
+let vehicleSortDir=1;
+function vehicleSortValue(x,key){
+ const v=x[key];
+ if(v===null||v===undefined)return "";
+ if(key==="MODEL YILI")return Number(String(v).replace(/\.0$/,""))||0;
+ if(key==="MUAYENE BİTİŞ"||key==="ZORUNLU TRAFİK SİGORTASI BİTİŞ")return String(v||"");
+ return String(v).trim();
+}
+function updateVehicleSortIndicators(){
+ document.querySelectorAll("#tbody").forEach(()=>{});
+ document.querySelectorAll("thead th.sortable").forEach(th=>{
+   const ind=th.querySelector(".sort-indicator");
+   if(!ind)return;
+   const key=th.dataset.sortKey;
+   ind.textContent=key===vehicleSortKey?(vehicleSortDir===1?"↑":"↓"):"↕";
+ });
+}
+function sortVehicles(key){
+ if(vehicleSortKey===key) vehicleSortDir*=-1; else {vehicleSortKey=key;vehicleSortDir=1;}
+ render();
 }
 function render(){
  const q=normalize(document.getElementById("search").value), loc=document.getElementById("location").value, cond=document.getElementById("condition").value;
- const rows=DATA.filter(x=>{
+ let rows=DATA.filter(x=>{
    const hay=Object.values(x).map(normalize).join(" ");
    const match=!q||hay.includes(q), ml=!loc||x["GÖREV YERİ"]===loc;
    const cs=docStatus(x["MUAYENE BİTİŞ"]);
    const matchc=!cond||cs===cond||docStatus(x["ZORUNLU TRAFİK SİGORTASI BİTİŞ"])===cond;
    return match&&ml&&matchc;
  });
+ if(vehicleSortKey){
+   rows.sort((a,b)=>{
+     const av=vehicleSortValue(a,vehicleSortKey), bv=vehicleSortValue(b,vehicleSortKey);
+     if(vehicleSortKey==="MODEL YILI") return (av-bv)*vehicleSortDir;
+     return String(av).localeCompare(String(bv),"tr",{numeric:true,sensitivity:"base"})*vehicleSortDir;
+   });
+ }
  document.getElementById("count").textContent=`${rows.length} kayıt`;
  document.getElementById("tbody").innerHTML=rows.map(x=>`<tr onclick='openModal(${JSON.stringify(x)})'>
  <td><span class="plate">${x["ARAC PLAKASI"]||"—"}</span><span class="sub">${x["RUHSAT BELGE NO"]||""}</span></td>
@@ -688,6 +718,7 @@ function render(){
  <td>${String(x["EK C MUAYENE"]||"").trim().toUpperCase()==="MUAF"?'<span class="status ok">MUAF</span>':status(x["EK C MUAYENE"])+`<span class="sub">${fmt(x["EK C MUAYENE"])}</span>`}</td>
  <td>${normalize(x["KASKO"])==="evet"?'<span class="status ok">EVET</span>':'<span class="status danger">HAYIR</span>'}</td>
  <td>${normalize(x["KLİMA DURUMU"])==="aktif"?'<span class="status ok">AKTİF</span>':'<span class="status warn">ARIZALI</span>'}</td><td style="text-align:center">${x["ÜRETİCİ FİRMA"]?`<span class="producer-status">${escapeHtml(x["ÜRETİCİ FİRMA"])}</span>`:"—"}</td></tr>`).join("");
+ updateVehicleSortIndicators();
 }
 function openModal(x){
  document.getElementById("mTitle").textContent=x["ARAC PLAKASI"]||"Araç";
